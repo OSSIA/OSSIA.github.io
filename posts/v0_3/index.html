@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!--
+	Twenty by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+  <title>
+    Version 0.3 development sprint
+  </title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="Open Software System for Interactive Applications - home of ossia score, a free, open-source, cross-platform intermedia sequencer for precise and flexible scripting of interactive scenarios.
+" />
+  <meta
+    name="keywords"
+    content="ossia, score, libossia, sequencer, interactive art, intermedia, new media art, osc, open sound control, midi, oscquery"
+  />
+
+  
+  <link rel="shortcut icon" type="image/png" href="/assets/score-logo.png" />
+  <noscript>
+    <link rel="stylesheet" href="/css/skel.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </noscript>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/skel.min.js"></script>
+  <script src="/js/skel-layers.min.js"></script>
+  <script src="/js/init.js"></script>
+
+  <meta name="viewport" content="width=device-width" />
+
+  <link
+    rel="canonical"
+    href="https://ossia.io/posts/v0_3/"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Catamaran:regular,bold,semi-bold,medium|Libre+Franklin:regular,bold,semi-bold,light,medium|Lato:regular,bold,semi-bold,light,medium"
+  />
+</head>
+<!-- <div id="cover"></div> -->
+
+
+  <body>
+
+    <header id="header">
+	<nav id="nav" style="vertical-align: middle; ">
+        <div id="ossia-logo-header" style="margin-left: 1em;" >
+            <a id="homebtn" class="home-logo" style="margin: 0;" href="/">
+                <image src="/assets/score-logo.png" height="45px" alt="score logo"/>
+                <h2 class="software small" style="padding: 0; padding-left: 0.2em;padding-bottom: 0.1em;">ossia</h2>
+            </a>
+        </div>
+        <div class="cat" style="flex-grow:1;">
+            <a href="/score/about.html">score</a>
+			<a href="/site-libossia/about.html">libossia</a>
+            <a href="/gallery.html">community</a>
+			<a href="/about.html">about</a>
+        </div>
+        <div>
+            <a href="https://forum.ossia.io/" target="_blank" style="padding-left: 0; padding-right: 1em;">forum</a>
+            <a href="https://gitter.im/OSSIA/score" target="_blank" style="padding:0; padding-right: 1em;">chat</a>
+             <a class="donate" href="https://opencollective.com/ossia" target="_blank" style="padding:0; padding-right: 1em;color: var(--orange);">donate</a>
+        </div>
+	</nav>
+</header>
+
+    <div class="page-content">
+          <article id="main">
+  <header class="special container">
+    <h2 class="post-title">Version 0.3 development sprint</h2>
+    <p class="post-meta">Dev  •  Mar 27, 2014  •  Julien</p>
+  </header>
+
+  <section class="style4 wrapper container">
+    <p>Most of the i-score core developers are currently running a development sprint at GMEA – Centre National de Création Musicale d’Albi-Tarn for the OSSIA (Open Scenario System for Interactive Application) project. They have been doing a great job putting together a solid basis as i-score moves toward version 0.3.</p>
+
+<p>This week’s work has been focusing on both i-score’s underlying architecture as well as its user interface and general workflow.</p>
+
+<p>Théo De La Hogue and Clément Bossut have been refining i-score’s engine’s API. As part of the OSSIA project, the Score C++ library should be easily implemented in other environments so that users are free to write a scenario in a dedicated application such as i-score while executing it thru a Max external or some distributed Raspberry devices for example.</p>
+
+<p>On the other side, Jean-Michaël Celerier and Nicolas Vuaille have been working on the graphical interface. i-score 0.3 and above will have a much improved workflow. The device explorer will be much more powerfull, by providing support for dynamic namespaces, filtering options, namespaces presets and more… This will make it much easier to deal with remote control of applications that have a huge namespace (i.e. device’s parameter architecture).</p>
+
+<p><span class="image featured"><img src="/images/MaquetteI-score0.3New-600x308.png" alt="" /></span></p>
+
+<p>The general timeline workflow has also been considerably refined. Based on an event-centered approach, i-score will allow to interleave events and processes and to further merge timeline and cue-based approaches. Thanks to work done on Score API, a plugin system will make it possible to add interpolation and automations between events as of version 0.2, but also to add other processes such as mappings, sub-scenarios, loops.</p>
+
+<p>A lot of other features are also on the workbench. So stay tuned for upcoming sneak peeks on i-score next big iteration !</p>
+
+  </section>
+  <section class="wrapper container nav">
+       
+        <a href="/posts/ux-workshop/" class="post-nav" style="float: left; text-align: left; ">&larr; <strong class="post-nav-title">User experience workshop</strong></a>
+        
+
+        <div style="position: absolute; left: 50%;">
+            <a href="/blog.html" class="post-nav" style="position: relative; left: -50%;"><strong class="post-nav-title">Back to all posts</strong></a>
+        </div>
+
+        
+        <a href="/posts/openbidouille/" class="post-nav" style="float: right; text-align: right;"><strong class="post-nav-title">Open Bidouille Camp</strong> &rarr;</a>
+        
+</section>
+
+</article>
+
+
+    </div>
+    <!-- Footer -->
+<footer id="footer">
+
+    <h4 class="follow-us">Follow us !</h4>
+    <ul class="icons">
+	<li><a href="https://twitter.com/ossia_io" class="icon circle"><img src="/css/images/social_media/Twitter_Social_Icon_Circle_Color.png" width="32px" alt="Twitter" /></a></li>
+	<li><a href="https://github.com/OSSIA/score" class="icon circle"><img src="/css/images/social_media/GitHub-Mark-Light-64px.png" width="32px" alt="GitHub" /></a></li>
+	<li><a href="https://vimeo.com/ossia" class="icon circle"><img src="/css/images/social_media/vimeo.png" width="32px" alt="Vimeo"/></a></li>
+	<li><a href="https://www.youtube.com/channel/UCwghQysyNdstRfv8YUPyglw" class="icon circle"><img src="/css/images/social_media/youtube_social_circle_red.png" width="32px" alt="YouTube"/></a></li>
+	<li><a href="https://www.facebook.com/ossia.io" class="icon circle"><img src="/css/images/social_media/f_logo_RGB-Blue_58.png" width="34px" alt="Facebook"/></a></li>
+    </ul>
+    <ul class="copyright">
+        <li>&copy; ossia 2021</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+    </ul>
+</footer>
+
+<script>
+$(function(){
+    $('.cat a').each(function(){
+    var category_name = "site-" + this.text;
+    if("Dev" ===  category_name){
+        $(this).addClass('active');
+        return false;
+    }
+    });
+});
+
+// load asynchronously videos to avoid slowing the page showing
+function init() {
+var vidDefer = document.getElementsByTagName('iframe');
+for (var i=0; i<vidDefer.length; i++) {
+if(vidDefer[i].getAttribute('data-src')) {
+vidDefer[i].setAttribute('src',vidDefer[i].getAttribute('data-src'));
+} } }
+window.onload = init;
+</script>
+
+
+  </body>
+</html>

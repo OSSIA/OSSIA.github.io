@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!--
+	Twenty by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+  <title>
+    Addresses
+  </title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="Open Software System for Interactive Applications - home of ossia score, a free, open-source, cross-platform intermedia sequencer for precise and flexible scripting of interactive scenarios.
+" />
+  <meta
+    name="keywords"
+    content="ossia, score, libossia, sequencer, interactive art, intermedia, new media art, osc, open sound control, midi, oscquery"
+  />
+
+  
+  <link rel="shortcut icon" type="image/png" href="/assets/score-logo.png" />
+  <noscript>
+    <link rel="stylesheet" href="/css/skel.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </noscript>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/skel.min.js"></script>
+  <script src="/js/skel-layers.min.js"></script>
+  <script src="/js/init.js"></script>
+
+  <meta name="viewport" content="width=device-width" />
+
+  <link
+    rel="canonical"
+    href="https://ossia.io/score/features/addresses.html"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Catamaran:regular,bold,semi-bold,medium|Libre+Franklin:regular,bold,semi-bold,light,medium|Lato:regular,bold,semi-bold,light,medium"
+  />
+</head>
+<!-- <div id="cover"></div> -->
+
+
+  <body>
+
+    <header id="header">
+	<nav id="nav" style="vertical-align: middle; ">
+        <div id="ossia-logo-header" style="margin-left: 1em;" >
+            <a id="homebtn" class="home-logo" style="margin: 0;" href="/">
+                <image src="/assets/score-logo.png" height="45px" alt="score logo"/>
+                <h2 class="software small" style="padding: 0; padding-left: 0.2em;padding-bottom: 0.1em;">ossia</h2>
+            </a>
+        </div>
+        <div class="cat" style="flex-grow:1;">
+            <a href="/score/about.html">score</a>
+			<a href="/site-libossia/about.html">libossia</a>
+            <a href="/gallery.html">community</a>
+			<a href="/about.html">about</a>
+        </div>
+        <div>
+            <a href="https://forum.ossia.io/" target="_blank" style="padding-left: 0; padding-right: 1em;">forum</a>
+            <a href="https://gitter.im/OSSIA/score" target="_blank" style="padding:0; padding-right: 1em;">chat</a>
+             <a class="donate" href="https://opencollective.com/ossia" target="_blank" style="padding:0; padding-right: 1em;color: var(--orange);">donate</a>
+        </div>
+	</nav>
+</header>
+
+    <div class="page-content">
+        <article id="main">
+  <header class="container" style="padding-top: 6em;text-align:center;">
+  
+    <div class="menu">
+            <a href="/score/about.html" class="menu-item" ><span class="icon-svg icon-about"/></span>About</a>
+            <a href="/score/download.html" class="menu-item" ><span class="icon-svg icon-download"/></span>Download</a>
+            <a href="/score/features.html" class="menu-item"><span class="icon-svg icon-feature"></span>Features</a>
+            <a href="/score/learn.html" class="menu-item"><span class="icon-svg icon-documentation"></span>Learn</a>
+            <a href="/contributor-guide.html" class="menu-item"><span class="icon-svg icon-contributing"></span>Contribute</a>
+    </div>
+        
+  <h2 class="page-title">Addresses</h2> 
+  </header>
+  <section class="wrapper style4 container">
+    <h2 id="pattern-match">Pattern match</h2>
+
+<p>It’s possible to do e.g.</p>
+
+<p>Given a device, for instance a MIDI device that looks like</p>
+
+<figure class="highlight"><pre><code class="language-matlab" data-lang="matlab"><span class="n">QUNEO</span><span class="p">:/</span><span class="mi">1</span><span class="p">/</span><span class="n">control</span><span class="p">/</span><span class="mi">1</span>
+<span class="n">QUNEO</span><span class="p">:/</span><span class="mi">1</span><span class="p">/</span><span class="n">control</span><span class="p">/</span><span class="mi">4</span>
+<span class="n">QUNEO</span><span class="p">:/</span><span class="mi">1</span><span class="p">/</span><span class="n">control</span><span class="p">/</span><span class="mi">23</span></code></pre></figure>
+
+<p>It’s possible to use</p>
+
+<figure class="highlight"><pre><code class="language-matlab" data-lang="matlab"><span class="n">QUNEO</span><span class="p">:/</span><span class="mi">1</span><span class="p">/</span><span class="n">control</span><span class="p">/</span><span class="o">*</span></code></pre></figure>
+
+<p>to refer to all the controls at once. Such addresses are called pattern matchs and are 
+available in ossia score for instance for use in input and output ports.</p>
+
+<p>Read more about <a href="https://ossia.io/ossia-docs/?c#pattern-matching">the whole set of possibilities in the pattern matching section of the libossia doc</a>.</p>
+
+<h2 id="address-types">Address types</h2>
+
+<p>In multiple cases in score and libossia, an address type can be used.</p>
+
+<p>All the units can be used: for instance, color.hsv, position.xyz… 
+Easy mappings also exist for convenience, listed afterwards.
+Note that some of the names used in those mapping may be later used by user interfaces to 
+do appropriate things (for stuff such as blob, font, label, buffer, filepath, url, width, scale…)</p>
+
+<h3 id="integers">Integers</h3>
+<ul>
+  <li>int</li>
+  <li>integer</li>
+  <li>int32</li>
+  <li>i32</li>
+  <li>long</li>
+</ul>
+
+<h3 id="floating-point">Floating point</h3>
+<ul>
+  <li>float</li>
+  <li>single</li>
+  <li>number</li>
+  <li>num</li>
+  <li>decimal</li>
+  <li>flt</li>
+  <li>float32</li>
+  <li>ieee754</li>
+  <li>real</li>
+  <li>width</li>
+  <li>length</li>
+  <li>len</li>
+  <li>height</li>
+  <li>glfloat</li>
+  <li>x</li>
+  <li>y</li>
+  <li>z</li>
+  <li>w</li>
+  <li>scale</li>
+</ul>
+
+<h3 id="string">String</h3>
+<ul>
+  <li>string</li>
+  <li>str</li>
+  <li>symbol</li>
+  <li>
+    <p>sym</p>
+  </li>
+  <li>
+    <p>font</p>
+  </li>
+  <li>
+    <p>label</p>
+  </li>
+  <li>url</li>
+  <li>filepath</li>
+  <li>path</li>
+  <li>file</li>
+  <li>folder</li>
+  <li>
+    <p>directory</p>
+  </li>
+  <li>bytearray</li>
+  <li>blob</li>
+  <li>buffer</li>
+</ul>
+
+<h3 id="boolean">Boolean</h3>
+<ul>
+  <li>bool</li>
+  <li>boolean</li>
+</ul>
+
+<h3 id="character">Character</h3>
+<ul>
+  <li>char</li>
+  <li>character</li>
+  <li>byte</li>
+</ul>
+
+<h3 id="arrays-vec2vec3vec4">Arrays (vec2/vec3/vec4)</h3>
+<ul>
+  <li>vec2</li>
+  <li>vec2f</li>
+  <li>vector2</li>
+  <li>size</li>
+  <li>dim</li>
+  <li>
+    <p>dims</p>
+  </li>
+  <li>vec3</li>
+  <li>vec3f</li>
+  <li>
+    <p>vector3</p>
+  </li>
+  <li>vec4</li>
+  <li>vector4</li>
+  <li>vec4f</li>
+  <li>rect</li>
+  <li>rectangle</li>
+</ul>
+
+<h3 id="impulse">Impulse</h3>
+<ul>
+  <li>pulse</li>
+  <li>impulse</li>
+  <li>infinitum</li>
+  <li>bang</li>
+</ul>
+
+<h3 id="list">List</h3>
+<ul>
+  <li>list</li>
+  <li>lst</li>
+  <li>tuple</li>
+  <li>vector</li>
+  <li>generic</li>
+  <li>anything</li>
+  <li>any</li>
+  <li>floatArray</li>
+  <li>integerArray</li>
+  <li>stringArray</li>
+</ul>
+
+
+  </section>
+</article>
+
+<script>
+$(function(){
+    $('.menu a').each(function(){
+    if("Addresses" ===  this.text){
+        $(this).addClass('active');
+         return false;
+    }
+    });
+});
+</script>
+
+    </div>
+    <!-- Footer -->
+<footer id="footer">
+
+    <h4 class="follow-us">Follow us !</h4>
+    <ul class="icons">
+	<li><a href="https://twitter.com/ossia_io" class="icon circle"><img src="/css/images/social_media/Twitter_Social_Icon_Circle_Color.png" width="32px" alt="Twitter" /></a></li>
+	<li><a href="https://github.com/OSSIA/score" class="icon circle"><img src="/css/images/social_media/GitHub-Mark-Light-64px.png" width="32px" alt="GitHub" /></a></li>
+	<li><a href="https://vimeo.com/ossia" class="icon circle"><img src="/css/images/social_media/vimeo.png" width="32px" alt="Vimeo"/></a></li>
+	<li><a href="https://www.youtube.com/channel/UCwghQysyNdstRfv8YUPyglw" class="icon circle"><img src="/css/images/social_media/youtube_social_circle_red.png" width="32px" alt="YouTube"/></a></li>
+	<li><a href="https://www.facebook.com/ossia.io" class="icon circle"><img src="/css/images/social_media/f_logo_RGB-Blue_58.png" width="34px" alt="Facebook"/></a></li>
+    </ul>
+    <ul class="copyright">
+        <li>&copy; ossia 2021</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+    </ul>
+</footer>
+
+<script>
+$(function(){
+    $('.cat a').each(function(){
+    var category_name = "site-" + this.text;
+    if("site-score" ===  category_name){
+        $(this).addClass('active');
+        return false;
+    }
+    });
+});
+
+// load asynchronously videos to avoid slowing the page showing
+function init() {
+var vidDefer = document.getElementsByTagName('iframe');
+for (var i=0; i<vidDefer.length; i++) {
+if(vidDefer[i].getAttribute('data-src')) {
+vidDefer[i].setAttribute('src',vidDefer[i].getAttribute('data-src'));
+} } }
+window.onload = init;
+</script>
+
+
+  </body>
+</html>

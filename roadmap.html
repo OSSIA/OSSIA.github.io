@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!--
+	Twenty by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+  <title>
+    Roadmap
+  </title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="Open Software System for Interactive Applications - home of ossia score, a free, open-source, cross-platform intermedia sequencer for precise and flexible scripting of interactive scenarios.
+" />
+  <meta
+    name="keywords"
+    content="ossia, score, libossia, sequencer, interactive art, intermedia, new media art, osc, open sound control, midi, oscquery"
+  />
+
+  
+  <link rel="shortcut icon" type="image/png" href="/assets/score-logo.png" />
+  <noscript>
+    <link rel="stylesheet" href="/css/skel.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </noscript>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/skel.min.js"></script>
+  <script src="/js/skel-layers.min.js"></script>
+  <script src="/js/init.js"></script>
+
+  <meta name="viewport" content="width=device-width" />
+
+  <link
+    rel="canonical"
+    href="https://ossia.io/roadmap.html"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Catamaran:regular,bold,semi-bold,medium|Libre+Franklin:regular,bold,semi-bold,light,medium|Lato:regular,bold,semi-bold,light,medium"
+  />
+</head>
+<!-- <div id="cover"></div> -->
+
+
+  <body>
+
+    <header id="header">
+	<nav id="nav" style="vertical-align: middle; ">
+        <div id="ossia-logo-header" style="margin-left: 1em;" >
+            <a id="homebtn" class="home-logo" style="margin: 0;" href="/">
+                <image src="/assets/score-logo.png" height="45px" alt="score logo"/>
+                <h2 class="software small" style="padding: 0; padding-left: 0.2em;padding-bottom: 0.1em;">ossia</h2>
+            </a>
+        </div>
+        <div class="cat" style="flex-grow:1;">
+            <a href="/score/about.html">score</a>
+			<a href="/site-libossia/about.html">libossia</a>
+            <a href="/gallery.html">community</a>
+			<a href="/about.html">about</a>
+        </div>
+        <div>
+            <a href="https://forum.ossia.io/" target="_blank" style="padding-left: 0; padding-right: 1em;">forum</a>
+            <a href="https://gitter.im/OSSIA/score" target="_blank" style="padding:0; padding-right: 1em;">chat</a>
+             <a class="donate" href="https://opencollective.com/ossia" target="_blank" style="padding:0; padding-right: 1em;color: var(--orange);">donate</a>
+        </div>
+	</nav>
+</header>
+
+    <div class="page-content">
+        <article id="main">
+    <header class="container" style="padding-top: 6em;text-align:center;">
+    
+    <div class="menu">
+            <a href="/about.html" class="menu-item" ><span class="icon-svg icon-about"/></span>About ossia</a>
+            <a href="/team.html" class="menu-item"><span class="icon-svg icon-forum"></span>Team</a>
+            <a href="/non-profit.html" class="menu-item"><span class="icon-svg icon-nonprofit"></span>Non-profit</a>
+            <a href="/roadmap.html" class="menu-item"><span class="icon-svg icon-feature"></span>Roadmap</a>
+            <a href="/research.html" class="menu-item"><span class="icon-svg icon-documentation"></span>Research</a>
+    </div>
+    
+    <h2 class="page-title">Roadmap</h2>
+  </header>
+
+    <section class="wrapper style4 container">
+        <p align="center">
+<a href="https://github.com/OSSIA/score/releases/tag/v2.5.2" class="page-button" target="_blank">Current stable version is 2.5.2</a>
+</p>
+
+<h2>Future plans</h2>
+
+<ul>
+  <li>Networked edition and execution. <a href="https://github.com/OSSIA/iscore-addon-network" target="_blank">These capabilities have been prototyped but not kept up to date with the rest of the software</a>.</li>
+  <li>Parametric processes. How to have parameters and variables used within the scope of a given box and changed easily across different instances of that box.</li>
+  <li>Mixer panel : making mixing from within score more straightforward.</li>
+  <li>WebAssembly support : experiments have been made a few years ago – most of the score engine and user interface builds for WebAssembly, but execution does not work yet in a web page.</li>
+  <li>Spout, Syphon support.</li>
+  <li>Better support for sequences.</li>
+  <li>Support for MIDI 2.0.</li>
+</ul>
+
+<h2><a href="https://github.com/OSSIA/score/releases/tag/v3.0.0-alpha1" target="_blank">ossia score v3 (release targeting late 2020)</a></h2>
+
+<p>ossia score 3 fulfills the long-term goal of being a proper multi-media platform, by providing integrated video abilities, in sync with the rest of the score, as well as musical abilities with support for tempo, musical metrics and quantization. Finally, the core engine has been extended to allow cycles in scenarios with a new kind of connection. This allows to implement state-machine-like behaviours in scenarios.</p>
+
+<ul>
+  <li><a href="https://twitter.com/jcelerie/status/1236809800727617537" target="_blank">Support for reading videos</a>, right now H.264 and HAP. Implementation uses Vulkan, Metal, D3D or OpenGL depending on the platform for maximal performance. Multiple viewports are supported. Spout output is supported.</li>
+  <li>Support for applying shader-based filters on these videos. Interactive shader format is supported.</li>
+  <li>Support for tempo, musical bars, etc. It is now possible to sync the triggering of a timenode to the beginning of the following bar for instance. Polyrythmy is supported : each interval can have its own tempo and metrics timeline.</li>
+  <li><a href="https://twitter.com/jcelerie/status/1245484342274646017" target="_blank">Support for cycles and loops</a> in the main scenario.</li>
+  <li><a href="https://twitter.com/jcelerie/status/1241774333535666176" target="_blank">Preset mechanism</a> for built-in processes.</li>
+  <li>Built-in looping for individual processes, to easily loop audio files.</li>
+  <li>Intervals can now be viewed in nodal mode to easily interconnect their processes.</li>
+  <li>Many small and useful new processes – signal visualization, pattern sequencer…</li>
+  <li><a href="https://twitter.com/jcelerie/status/1307792769277190147" target="_blank">JIT compilation support</a>.  This will be an experimental feature for the 3.0 release cycle, allowing you to write and run C++ extensions directly from within the software.</li>
+</ul>
+
+<h2><a href="https://github.com/OSSIA/score/releases/tag/v2.5.2" target="_blank">ossia score v2.5</a></h2>
+
+<p>This version is a big update to 2.0, adding two new processes :</p>
+
+<ul>
+  <li>Control surface : allows to have UIs to control remote parameters in the score</li>
+  <li>Nodal : allows to layout processes in a graph interface, like many other famous visual programming languages. Temporal processes can be nested in nodal processes.</li>
+  <li>RemoteControl : control your score through a simple WebSockets API.</li>
+  <li>Tons of UI work</li>
+</ul>
+
+<h2><a href="https://github.com/OSSIA/score/releases/tag/v2.0.0-a1" target="_blank">ossia score v2.0</a></h2>
+
+<p>The 2.0 version is a paradigm shift : it introduces data and audio processing in score. The name was changed to reflect the OSSIA project legacy. It is now possible to play sounds, apply sound effects, among many other changes. The main highlights are :</p>
+
+<ul>
+  <li>Execution is now based on synchronous audio processing APIs</li>
+  <li>Playback of sounds</li>
+  <li>Support for LV2, VST effects and instruments</li>
+  <li>Support for Faust effects. The Faust compiler is integrated directly to score.</li>
+  <li>Support for many new protocols : OSCQuery, ArtNet…</li>
+  <li>Many new processes: LFO, step sequencer, math expressions, etc</li>
+  <li>Pattern matching</li>
+  <li>Drag’n’drop in a lot of places</li>
+  <li>Creation of a library panel and a <a href="https://github.com/OSSIA/score-user-library" target="_blank">user library</a></li>
+  <li>A super cute new mascot, <a href="https://camo.githubusercontent.com/2d6bd98dd127261a5306d0d9c73acf28c63795f7/68747470733a2f2f692e696d6775722e636f6d2f327842574967392e706e67" target="_blank">Oscar</a> !</li>
+</ul>
+
+<p>The first release for the 2.0 version was released in April 2018.</p>
+
+<h2><a href="https://github.com/OSSIA/score/releases/tag/v1.0.0-b40" target="_blank">i-score v1.0 </a></h2>
+
+<p>The 1.0 version is the concretization of the last year of effort of the OSSIA project.
+Thanks to a from-scratch rewrite, the software has been highly modularized, and now offers the following features :</p>
+
+<ul>
+  <li>Undo-redo</li>
+  <li>Restore on crash</li>
+  <li>Various plug-in APIs</li>
+  <li>Loops, mappings, JavaScript processes</li>
+  <li>Arbitrary hierarchy</li>
+  <li>Complete conditional branching and triggering</li>
+  <li>A new dark blue theme</li>
+</ul>
+
+<p>The 1.0 version was released in 2016.</p>
+
+<h2>i-score v0.3</h2>
+
+<p>Thanks again to the OSSIA project, a research effort will be carried on from early-2014 to 2015 in order to implement logic scenarios in i-score. This will include:</p>
+
+<ul>
+  <li>Support for looping boxes and (sub-)scenarios</li>
+  <li>Better graphic support for the conditional branching</li>
+  <li>Multi-user support</li>
+  <li>Framework for the future support of “plug-in” boxes:
+    <ul>
+      <li>Mapping boxes (for several one-to-one mappings between remote parameters)</li>
+      <li>Generic boxes and SDK for third-party boxes (e.g. audio boxes using JamomaAudioGraph, video/openGL boxes using QuartzComposer, etc…)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>i-score v0.2</h2>
+
+<p>Thanks to the OSSIA research project, some services of i-score have been improved by implementing the Jamoma Modular framework into libIscore, and a dedicated framework for Interactive scores management</p>
+
+<p>This allows some new features and improvements :</p>
+
+<ul>
+  <li>Better devices/namespace support, including:
+    <ul>
+      <li>better devices configuration and automatic discovery</li>
+      <li>devices’ parameters’ attributes support (including range, type, etc….)</li>
+      <li>better curve management</li>
+      <li>recording of performance actions as curves</li>
+      <li>declaration and management of i-score’s boxes parameters (such as speed, trigger points….)</li>
+    </ul>
+  </li>
+  <li>Initial support of the conditional branching</li>
+</ul>
+
+<h2>v0.1</h2>
+
+<p>Initial version, including (as of 0.1-alpha1 – December 2012):</p>
+
+<ul>
+  <li>Linear edition (no loops, no branching)</li>
+  <li>One static Minuit device only (MinuitDevice1)</li>
+  <li>Simple curves (no range editing)</li>
+  <li>Nested scenarios (hierarchy) support</li>
+  <li>Simple playing (unfinished GOTO function)</li>
+</ul>
+
+<p>Several incremental alpha versions, have been released along the way, including:</p>
+
+<ul>
+  <li>Plain OSC support</li>
+  <li>Minuit devices configuration</li>
+  <li>Several interface improvements</li>
+</ul>
+
+
+    </section>
+</article>
+    
+<script>
+$(function(){
+    $('.menu a').each(function(){
+    if("Roadmap" ===  this.text){
+        $(this).addClass('active');
+         return false;
+    }
+    });
+});
+</script>
+
+    </div>
+    <!-- Footer -->
+<footer id="footer">
+
+    <h4 class="follow-us">Follow us !</h4>
+    <ul class="icons">
+	<li><a href="https://twitter.com/ossia_io" class="icon circle"><img src="/css/images/social_media/Twitter_Social_Icon_Circle_Color.png" width="32px" alt="Twitter" /></a></li>
+	<li><a href="https://github.com/OSSIA/score" class="icon circle"><img src="/css/images/social_media/GitHub-Mark-Light-64px.png" width="32px" alt="GitHub" /></a></li>
+	<li><a href="https://vimeo.com/ossia" class="icon circle"><img src="/css/images/social_media/vimeo.png" width="32px" alt="Vimeo"/></a></li>
+	<li><a href="https://www.youtube.com/channel/UCwghQysyNdstRfv8YUPyglw" class="icon circle"><img src="/css/images/social_media/youtube_social_circle_red.png" width="32px" alt="YouTube"/></a></li>
+	<li><a href="https://www.facebook.com/ossia.io" class="icon circle"><img src="/css/images/social_media/f_logo_RGB-Blue_58.png" width="34px" alt="Facebook"/></a></li>
+    </ul>
+    <ul class="copyright">
+        <li>&copy; ossia 2021</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+    </ul>
+</footer>
+
+<script>
+$(function(){
+    $('.cat a').each(function(){
+    var category_name = "site-" + this.text;
+    if("site-about" ===  category_name){
+        $(this).addClass('active');
+        return false;
+    }
+    });
+});
+
+// load asynchronously videos to avoid slowing the page showing
+function init() {
+var vidDefer = document.getElementsByTagName('iframe');
+for (var i=0; i<vidDefer.length; i++) {
+if(vidDefer[i].getAttribute('data-src')) {
+vidDefer[i].setAttribute('src',vidDefer[i].getAttribute('data-src'));
+} } }
+window.onload = init;
+</script>
+
+
+  </body>
+</html>

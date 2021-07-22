@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!--
+	Twenty by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+  <title>
+    Achieving generic bliss with reflection in modern C++
+  </title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="Open Software System for Interactive Applications - home of ossia score, a free, open-source, cross-platform intermedia sequencer for precise and flexible scripting of interactive scenarios.
+" />
+  <meta
+    name="keywords"
+    content="ossia, score, libossia, sequencer, interactive art, intermedia, new media art, osc, open sound control, midi, oscquery"
+  />
+
+  
+  <link rel="shortcut icon" type="image/png" href="/assets/score-logo.png" />
+  <noscript>
+    <link rel="stylesheet" href="/css/skel.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </noscript>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/skel.min.js"></script>
+  <script src="/js/skel-layers.min.js"></script>
+  <script src="/js/init.js"></script>
+
+  <meta name="viewport" content="width=device-width" />
+
+  <link
+    rel="canonical"
+    href="https://ossia.io/posts/reflection/"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Catamaran:regular,bold,semi-bold,medium|Libre+Franklin:regular,bold,semi-bold,light,medium|Lato:regular,bold,semi-bold,light,medium"
+  />
+</head>
+<!-- <div id="cover"></div> -->
+
+
+  <body>
+
+    <header id="header">
+	<nav id="nav" style="vertical-align: middle; ">
+        <div id="ossia-logo-header" style="margin-left: 1em;" >
+            <a id="homebtn" class="home-logo" style="margin: 0;" href="/">
+                <image src="/assets/score-logo.png" height="45px" alt="score logo"/>
+                <h2 class="software small" style="padding: 0; padding-left: 0.2em;padding-bottom: 0.1em;">ossia</h2>
+            </a>
+        </div>
+        <div class="cat" style="flex-grow:1;">
+            <a href="/score/about.html">score</a>
+			<a href="/site-libossia/about.html">libossia</a>
+            <a href="/gallery.html">community</a>
+			<a href="/about.html">about</a>
+        </div>
+        <div>
+            <a href="https://forum.ossia.io/" target="_blank" style="padding-left: 0; padding-right: 1em;">forum</a>
+            <a href="https://gitter.im/OSSIA/score" target="_blank" style="padding:0; padding-right: 1em;">chat</a>
+             <a class="donate" href="https://opencollective.com/ossia" target="_blank" style="padding:0; padding-right: 1em;color: var(--orange);">donate</a>
+        </div>
+	</nav>
+</header>
+
+    <div class="page-content">
+          <article id="main">
+  <header class="special container">
+    <h2 class="post-title">Achieving generic bliss with reflection in modern C++</h2>
+    <p class="post-meta">Dev  •  Jul 22, 2021  •  Jean-Michaël Celerier</p>
+  </header>
+
+  <section class="style4 wrapper container">
+    <p>Reflection is often presented as a feature that makes software harder to understand.
+In this article, I will present ways to approximate some level of static reflection in pure C++, thanks to C++17 and C++20 features, show how that tool can considerably simplify a class of programs and libraries, and more generally enable ontologies to be specified and implemented in code.
+<!--more--></p>
+
+<h1 id="what-we-aim-to-solve">What we aim to solve</h1>
+
+<p>Imagine that you are writing a neat algorithm. You’ve worked on it for a few years ; it produces great results and is now ready to be shared to the world. 
+Let’s say that this algorithm is a noise generator.</p>
+
+<p>You’d like that noise generator to easily work in a breadth of environments: in 2D bitmap manipulation programs (<a href="https://krita.org">Krita</a>, GIMP, …), in audio and multimedia software (PureData, Audacity, <a href="https://ossia.io">ossia score</a>, <a href="https://mixxx.org/">Mixxx</a>…), 3D voxel editors, etc.</p>
+
+<p>Your algorithm’s implementation more-or-less looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="c1">// [[pre: alpha &gt;= -1. &amp;&amp; alpha &lt;= 1. ]]</span>
+<span class="c1">// [[pre: 11 &lt;= beta &amp;&amp; beta &lt; 247 ]]</span>
+<span class="c1">// [[post ret: ret &gt;= 0. &amp;&amp; ret &lt;= 1.]]</span>
+<span class="k">auto</span> <span class="nf">noise</span><span class="p">(</span>
+    <span class="kt">float</span> <span class="n">input</span><span class="p">,</span>
+    <span class="kt">float</span> <span class="n">alpha</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="n">beta</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">// set of extremely complex operations involving the inputs to the algorithm</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">fmod</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">alpha</span><span class="p">),</span> <span class="kt">float</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span> <span class="o">/</span> <span class="n">beta</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>You are proud of your neat results, prepare conference papers, etc… but ! Now is the time to implement your noise algorithm in a set of software in order to have it used widely and become the next industry standard in procedural noise generation.</p>
+
+<p>If you are used to working in C#, Java, Python, or any other language more recent than 1983, the solution may at this point seem trivial. Sadly, in C++, this has been unordinately hard to implement until now, especially when one aims for as close as possible to a zero-runtime cost-abstraction.</p>
+
+<p>On the other hand, if you implement your algorithm in C#, Java, or Python, having it useable from any other runtime environment is a massive challenge, as two VMs, often with their own garbage collection mechanism, etc… now have to cooperate. Thus, for something really universal, a language than can compile to native binaries, with minimal dependencies, is the easiest way to have a wide reach. In particular, most multimedia host environments are written in a native language and expect plug-ins conforming to operating system DLLs, executable and dynamic linker APIs: ELF, PE, Macho-O ; <code class="language-plaintext highlighter-rouge">dlopen</code> and friends. There aren’t that many suitable candidates with a high enough capacity for abstraction: C++, Rust, D without GC, Zig. Since most of the media host provide C or C++ APIs, and C does not have any interesting form of reflection, C++ is the natural, minimal-friction choice.</p>
+
+<p>This post is a hint of how much better and easier life is with true reflection as available in other languages, and in particular how attribute reflection and user-defined attributes, would make one’s life. And most importantly, what kind of abstracting power “reflective programming” holds over existing generic programming techniques in C++: macro-based metaprogramming, template-based metaprogramming (with e.g. CRTP being commonly used for that).</p>
+
+<h3 id="the-problem-domain">The problem domain</h3>
+
+<p>The software in which we want to embed our algorithm should be able to display UI widgets adapted for the control of <code class="language-plaintext highlighter-rouge">alpha</code> and <code class="language-plaintext highlighter-rouge">beta</code>, whose bounds you have so painstakingly and thoroughly defined. Likewise, the UI widgets should adapt to the type of the parameter ; a spinbox may make more sense for <code class="language-plaintext highlighter-rouge">beta</code>, and a slider, knob, or any kind of continuous control for <code class="language-plaintext highlighter-rouge">alpha</code>.</p>
+
+<p>Maybe you’d also like to serve your algorithm over the network, or through an IPC protocol like D-Bus. Again, you’d have to specify the data format being used.</p>
+
+<p>If for instance you were using the OSC protocol, to make your algorithm controllable over the network, messages may look like:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="o">/</span><span class="n">noise</span><span class="o">/</span><span class="n">input</span> <span class="p">,</span><span class="n">f</span> <span class="mf">0.123</span>
+<span class="o">/</span><span class="n">noise</span><span class="o">/</span><span class="n">alpha</span> <span class="p">,</span><span class="n">f</span> <span class="mf">13.5</span>
+<span class="o">/</span><span class="n">noise</span><span class="o">/</span><span class="n">beta</span> <span class="p">,</span><span class="n">i</span> <span class="mi">17</span></code></pre></figure>
+
+<p>Maybe you’d also like to serialize your algorithm’s inputs, in order to have a preset system, or just to exchange with another runtime system expecting a serialized version of your data. In JSON ? YAML ? Binary ? Network-byte-order binary ? GLSL <code class="language-plaintext highlighter-rouge">std140</code> ? So many possibilities !</p>
+
+<h3 id="hell-on-earth">Hell on earth</h3>
+
+<p>For <em>every</em> protocol, host environment, plug-in system, … that you want to provide your algorithm to, you will have to write some amount of binding code, also often called <em>glue code</em>.</p>
+
+<p>How does that binding code may look, you ask ?</p>
+
+<p>Let’s look at some examples from around the world:</p>
+
+<ul>
+  <li><a href="https://github.com/pure-data/externals-howto/blob/master/example4/xfade%7E.c">Making a fade algorithm in PureData</a> : a class is constructed at run-time, with custom <code class="language-plaintext highlighter-rouge">t_object</code>, <code class="language-plaintext highlighter-rouge">t_float</code>, <code class="language-plaintext highlighter-rouge">t_inlet</code> etc… types, some of which requiring calls to various runtime allocating functions. Lots of not-very-safe-looking casts (but it’s C, there’s not a lot of choice).</li>
+  <li><a href="https://github.com/Cycling74/cv.jit/blob/master/source/projects/cv.jit.noise/cv.jit.noise.cpp">Noise generator for Max/MSP’s Jitter, using OpenCV</a>. Same as PureData, with macros sprinkled on top. Wanna get a floating-point value input by the user ? Lo and behold</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">cv_jit_noise_set_stddev</span><span class="p">(</span><span class="n">t_cv_jit_noise</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="n">t_symbol</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="kt">short</span> <span class="n">argc</span><span class="p">,</span> <span class="n">t_atom</span> <span class="o">*</span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&amp;&amp;</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">short</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">x</span><span class="o">-&gt;</span><span class="n">m_dims</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+			<span class="kt">short</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">argc</span> <span class="o">?</span> <span class="n">i</span> <span class="o">:</span> <span class="n">argc</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+			<span class="n">x</span><span class="o">-&gt;</span><span class="n">m_stddev</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">atom_getfloat</span><span class="p">(</span><span class="n">argv</span> <span class="o">+</span> <span class="n">j</span><span class="p">);</span>
+            <span class="p">...</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>What happens if <code class="language-plaintext highlighter-rouge">argv + j</code> isn’t a float but a string ? Let’s leave that for future generations to discover !</p>
+
+<ul>
+  <li><a href="https://github.com/SpotlightKid/faustfilters/blob/master/plugins/oberheim/Oberheim.cpp">Audio filter suitable for use as a VST</a>. Notice how the parameters to the algorithms are handled in <code class="language-plaintext highlighter-rouge">switch/case 0,1,2...</code> ; thankfully this is all generated code from the Faust programming language. What happens if at some point a parameter is removed ? Better have good unit tests to catch all the implicit uses of each parameter…</li>
+  <li><a href="https://openfx.readthedocs.io/en/master/Guide/ofxExample3_Gain.html#gainexample">OpenFX image filter</a>: here’s how one says that the algorithm has a bounded input widget (e.g. a slider going from 0 to 10 with a default value of 1):</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">gPropertySuite</span><span class="o">-&gt;</span><span class="n">propSetString</span><span class="p">(</span><span class="n">paramProps</span><span class="p">,</span> <span class="n">kOfxParamPropDoubleType</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kOfxParamDoubleTypeScale</span><span class="p">);</span>
+<span class="n">gPropertySuite</span><span class="o">-&gt;</span><span class="n">propSetDouble</span><span class="p">(</span><span class="n">paramProps</span><span class="p">,</span> <span class="n">kOfxParamPropDefault</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+<span class="n">gPropertySuite</span><span class="o">-&gt;</span><span class="n">propSetDouble</span><span class="p">(</span><span class="n">paramProps</span><span class="p">,</span> <span class="n">kOfxParamPropDisplayMin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+<span class="n">gPropertySuite</span><span class="o">-&gt;</span><span class="n">propSetDouble</span><span class="p">(</span><span class="n">paramProps</span><span class="p">,</span> <span class="n">kOfxParamPropDisplayMax</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">);</span></code></pre></figure>
+
+<p>Hopefully you don’t forget all the incantations’s updates when you decide that this control would indeed be better as an integer !</p>
+<ul>
+  <li>A very good example is the <a href="https://cristal.univ-lille.fr/~casiez/1euro/">1€ filter</a> input filtering algorithm. The actual algorithm can fit in a few dozen lines. The <a href="https://github.com/DarioMazzanti/OneEuroFilterUnreal">Unreal Engine binding</a> is almost 600 lines !</li>
+  <li>Things like <a href="https://github.com/iPlug2/iPlug2/blob/master/Examples/IPlugEffect/IPlugEffect.cpp#L8">iPlug</a> are a bit more sane, but we still have to triplicate our parameter creation / access: in an enum in the hpp, in the constructor and finally in <code class="language-plaintext highlighter-rouge">ProcessBlock</code> where we get the actual value. This is still a whole lot of work versus <strong>JUST ACCESSING A FLOAT IN A STRUCT !!11!1!!</strong></li>
+  <li>A Krita <a href="https://github.com/KDE/krita/blob/master/plugins/generators/simplexnoise/simplexnoisegenerator.cpp#L62">plug-in for noise generation</a> – here Qt’s QObject run-time property system is used to declare and use the algorithm controls. That also means inheriting from Qt’s QObject, which has a non-negligible memory cost.</li>
+  <li>Wanna receive messages through OSC ? <a href="https://github.com/RossBencina/oscpack/blob/master/examples/SimpleReceive.cpp">Make the exceptions rain !</a></li>
+  <li>Wanna expose your algorithm to another language, such as Python ? <a href="https://pybind11.readthedocs.io/en/stable/advanced/classes.html">Get ready for some py::&lt;&gt;’y boilerplate</a>.</li>
+</ul>
+
+<p>As such, one can see that:</p>
+<ul>
+  <li>
+    <p>There is no current generic way for writing an audio processor in PureData, and have it work in, say, Audacity, Ardour or LMMS as a VST plug-in, expose it through the network… Writing a PureData external ties you to PureData, and so does writing a Krita plug-in.
+It’s the well-known <a href="https://www.oreilly.com/radar/thinking-about-glue/">“quadratic glue”</a> problem: there are N algorithms and M “host systems”, thus NxM glue code to write.</p>
+  </li>
+  <li>
+    <p>All the approaches are riddled with unsafety, since the run-time environments force the inputs &amp; outputs to the algorithm to be declared dynamically ; thus, if you make an error in your call sequence, you rely on the runtime system you are using to notice this error and notify you (e.g; if you are lucky you’ll get an error message on stdout ; but most likely a crash).</p>
+  </li>
+  <li>
+    <p>All the approaches require duplicating the actual parameters of your algorithm, e;g. our <code class="language-plaintext highlighter-rouge">alpha</code>, <code class="language-plaintext highlighter-rouge">beta</code>, once as actual C++ variables, once as facades to the runtime object system you are interacting with.</p>
+  </li>
+</ul>
+
+<p>Of course, the above list is not an indictment on the code quality of those various projects: they simply all do as well as they can considering the limitations of the language at the time they were originally written, in some cases multiple decades ago.</p>
+
+<p>We will show how reflection allows to improve on that, and in particular get down to N+M pieces of code to write instead of NxM.</p>
+
+<h3 id="problem-statement">Problem statement</h3>
+<p>Basically: there’s a ton of environments (also called “hosts”, “host APIs” in the remainder of this article) which define ad-hoc protocols or object systems. Can we find a way to make a C++ definition (“algorithm”, “plug-in” in the article) which:</p>
+
+<ul>
+  <li>
+    <p>Does not depend on any pre-existing code: doesn’t inherit from a class, doesn’t call arbitrary run-time functions, etc. The <em>definition</em> of the algorithm shall be writable without having to include <em>anything</em>, even standard headers (discounting of course whatever third-party library is required for the algorithm implementation).</p>
+  </li>
+  <li>
+    <p>Does not use anything other than structures of trivial, standard-layout types. No tuples, no templates, no magic, just <code class="language-plaintext highlighter-rouge">structs</code> containing <code class="language-plaintext highlighter-rouge">float</code>, <code class="language-plaintext highlighter-rouge">int</code> and not much more. This is because we want to be able to give the <em>simplest possible expression</em> of a problem. C++ is often sold as a language which aims to leave no room for a lower-level language. The technique in this post is about leaving no room for a simpler and more readable implementation of an algorithm, while maintaining the ability to control its inputs and outputs at run-time. Ideally, that would lead to a collection of such algorithms not depending on any framework, except optional concept definitions for a given problem domain. Of course, once <em>this</em> works, a specific community could choose to define its core concepts and ontologies through a set of standard-library-like-types, e.g. <code class="language-plaintext highlighter-rouge">string_view</code>, <code class="language-plaintext highlighter-rouge">array</code> or <code class="language-plaintext highlighter-rouge">span</code>-like types.</p>
+  </li>
+  <li>
+    <p>Does not duplicate parameter creation: defining a parameter should be as simple as adding a member to a structure. The parameter’s value should not be of a complicated, custom library type; just using <code class="language-plaintext highlighter-rouge">int</code> or <code class="language-plaintext highlighter-rouge">float</code> should work. At no point one should have to write the name of a variable twice, e.g. with a macro system such as Boost.Fusion with <code class="language-plaintext highlighter-rouge">BOOST_FUSION_ADAPT_STRUCT</code>, with Qt / copperspice / verdigris property systems, or with pybind-like templates: remember, we do not want our algorithm code to have any dependency !</p>
+  </li>
+  <li>
+    <p>Allows to specify metadata on parameters: as one could see, it is necessary to be able to define bounds, textual descriptions, etc… for the inputs to the algorithm. For instance, the algorithm author may want to define a help text for each of the parameters, describing how each control will affect the result.</p>
+  </li>
+  <li>
+    <p>Allows that definition to be <em>automatically</em> used to generate binding code to any of the environments, protocols, runtime systems mentioned above, with for only tool a C++20 compiler.</p>
+  </li>
+</ul>
+
+<h1 id="massaging-the-problem">Massaging the problem</h1>
+
+<p>Sadly, C++ does not offer true reflection on any entity: from the generic function <code class="language-plaintext highlighter-rouge">noise</code> defined above, it would be fairly hard to extract its parameter list, and reconstruct what we need to perform the above. Likewise, due to the lack of user-defined attributes, one wouldn’t be able to tag the input / output parameters, to give them a name, bounds, etc.</p>
+
+<p>We will however show that with very simple transformations, we can reach our goals !</p>
+
+<h3 id="first-transformation-function-to-class">First transformation: function to class</h3>
+
+<p>This transformation is commonplace in C++: classes / structs are in general more convenient to use than straight function pointers. They are easier to pass as arguments, work better with the type system as template arguments, etc.</p>
+
+<p>Let’s apply it:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="c1">// noise.hpp</span>
+<span class="cp">#pragma once
+</span><span class="k">struct</span> <span class="nc">noise</span>
+<span class="p">{</span>
+  <span class="kt">float</span> <span class="n">alpha</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">beta</span><span class="p">;</span>
+
+  <span class="cm">/* constexpr_in_some_future_standard */</span>
+  <span class="kt">float</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">float</span> <span class="n">input</span><span class="p">)</span> <span class="k">const</span>
+  <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">fmod</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">alpha</span><span class="p">),</span> <span class="kt">float</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span> <span class="o">/</span> <span class="n">beta</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span></code></pre></figure>
+
+<p>Thankfully, the actual implementation does not change ; we merely put some arguments as struct members instead. If the algorithm is complex with many settings and toggles, it is likely that this was already the case in your implementation.</p>
+
+<p>What if, dear reader, I told you that, as of C++17 (and actually even 14 if using a non-legal hack), this is pretty much enough for achieving three of our four goals (with some limitations, mainly on the number of members) ?</p>
+
+<h3 id="mapping-our-class-to-a-run-time-api-automagically">Mapping our class to a run-time API automagically</h3>
+
+<p>Assume the following imaginary run-time API for doing some level of processing, in cross-platform C89:</p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">lib_type_t</span><span class="p">;</span>
+
+<span class="k">enum</span> <span class="n">lib_argument_types</span> <span class="p">{</span>
+    <span class="n">kFloat</span><span class="p">,</span> <span class="n">kInt</span>
+<span class="p">};</span>
+
+<span class="n">lib_type_t</span> <span class="nf">lib_define_type</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">lib_add_float</span><span class="p">(</span><span class="n">lib_type_t</span> <span class="n">handle</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">ptr</span><span class="p">,</span> <span class="kt">float</span> <span class="n">min</span><span class="p">,</span> <span class="kt">float</span> <span class="n">max</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">lib_add_int</span><span class="p">(</span><span class="n">lib_type_t</span> <span class="n">handle</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">ptr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">min</span><span class="p">,</span> <span class="kt">int</span> <span class="n">max</span><span class="p">);</span>
+
+<span class="c1">// Vararg is a list of lib_argument_types members, defining the arguments of the function.</span>
+<span class="kt">void</span> <span class="nf">lib_add_method</span><span class="p">(</span><span class="n">lib_type_t</span> <span class="n">handle</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">func</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">context</span><span class="p">,</span> <span class="n">lib_argument_types</span> <span class="n">input</span><span class="p">,</span> <span class="n">lib_argument_types</span> <span class="n">output</span><span class="p">);</span> <span class="c1">//some APIs may put varargs here instead</span></code></pre></figure>
+
+<p>To register our process to thar imaginary API, one may write the following, which would then be compiled as a .dll / .so / .dylib and be loaded by our runtime system through <code class="language-plaintext highlighter-rouge">dlopen</code> and friends:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">noise</span> <span class="n">algo</span><span class="p">;</span>
+<span class="kt">void</span> <span class="nf">process</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">context</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">in</span><span class="p">)</span>
+<span class="p">{</span> 
+  <span class="n">noise</span><span class="o">&amp;</span> <span class="n">algo</span> <span class="o">=</span> <span class="o">*</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">noise</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+  <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">algo</span><span class="p">(</span><span class="o">*</span><span class="n">in</span><span class="p">);</span> 
+<span class="p">}</span>
+
+<span class="n">lib_type_t</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="k">auto</span> <span class="n">r</span> <span class="o">=</span> <span class="n">lib_define_type</span><span class="p">(</span><span class="s">"noise"</span><span class="p">);</span>
+  <span class="n">lib_add_float</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">"alpha"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">algo</span><span class="p">.</span><span class="n">alpha</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">);</span> <span class="c1">// oops</span>
+  <span class="n">lib_add_int</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">"beta"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">algo</span><span class="p">.</span><span class="n">beta</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">247</span><span class="p">);</span>
+  <span class="n">lib_add_method</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">"process"</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">process</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">algo</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>What we want, is simply to use C++ to generate all the code above automatically.
+That means, most importantly, to call the relevant <code class="language-plaintext highlighter-rouge">lib_add_*</code> function for each parameter with the correct arguments.</p>
+
+<h3 id="enumerating-members">Enumerating members</h3>
+
+<p>This is trivial, thanks to a library, Boost.PFR, which technically works from C++14 and up.
+Note that the library is under the Boost umbrella but does not have any dependencies and can be used stand-alone.
+The technique is basically a band-aid until we get true reflection: it counts the fields by checking whether the type T is constructible by N arguments of a magic type convertible to anything, and then uses destructuring to generate tuples of the matching count.</p>
+
+<p>In a nutshell:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="nf">tie_as_tuple</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="n">size</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">_1</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>  
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">_1</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">auto</span> <span class="nf">tie_as_tuple</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="n">size</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">_1</span><span class="p">,</span> <span class="n">_2</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>  
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">_1</span><span class="p">,</span> <span class="n">_2</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// etc... computer-generated</span></code></pre></figure>
+
+<p>It opens a wealth of possibilities: iterating on every member, performing operations on them, etc. ; the only restriction being: the type must be an aggregate. Thankfully, that is not a very hard restriction to follow, especially if we want to write declarative code, which lends itself pretty well to using aggregates.</p>
+
+<p>Let’s for instance write a function that takes our struct and generates the <code class="language-plaintext highlighter-rouge">lib_add_float</code> / <code class="language-plaintext highlighter-rouge">lib_add_int</code> calls:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">bind_to_lib</span> <span class="p">{</span>
+  <span class="n">lib_type_t</span> <span class="n">handle</span><span class="p">;</span>
+
+  <span class="kt">void</span> <span class="n">register_parameters</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">algo</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">struct</span> <span class="p">{</span>
+        <span class="n">bind_to_lib</span><span class="o">&amp;</span> <span class="n">self</span><span class="p">;</span>
+        <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">float</span><span class="o">&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span>
+          <span class="n">lib_add_float</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">handle</span><span class="p">,</span> <span class="s">"???"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">,</span> <span class="o">???</span><span class="p">,</span> <span class="o">???</span><span class="p">);</span> 
+        <span class="p">}</span>
+        <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span>
+          <span class="n">lib_add_int</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">handle</span><span class="p">,</span> <span class="s">"???"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">i</span><span class="p">,</span> <span class="o">???</span><span class="p">,</span> <span class="o">???</span><span class="p">);</span> 
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="n">visitor</span><span class="p">;</span>
+    <span class="n">boost</span><span class="o">::</span><span class="n">pfr</span><span class="o">::</span><span class="n">for_each_field</span><span class="p">(</span><span class="n">algo</span><span class="p">,</span> <span class="n">visitor</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span></code></pre></figure>
+
+<p>This gets us 90% there: if our C API was just <code class="language-plaintext highlighter-rouge">lib_add_float(lib_type_t, float*);</code> that blog stop would stop right there !</p>
+
+<p>But, as it stands, our API also expects some additional metadata: a pretty name to show to the user, mins and maxs…</p>
+
+<h3 id="second-transformation-ad-hoc-types-for-parameters">Second transformation: ad-hoc types for parameters</h3>
+
+<p>This transformation is mechanical, but complexifies our code a little bit.
+We will change each of our parameters, into an anonymous structure containing the parameter:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">float</span> <span class="n">alpha</span><span class="p">;</span></code></pre></figure>
+
+<p>becomes</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="p">{</span>
+  <span class="kt">float</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">alpha</span><span class="p">;</span></code></pre></figure>
+
+<p>And at this point, it becomes easy to add metadata that will not have a per-instance cost, unlike a lot of runtime systems (for instance QObject properties used in Krita plug-ins):</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="p">{</span>
+  <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"α"</span><span class="n">sv</span><span class="p">;</span> <span class="p">}</span>
+  <span class="kt">float</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">alpha</span><span class="p">;</span></code></pre></figure>
+
+<p>The code sadly uglifies a little bit:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">noise</span>
+<span class="p">{</span>
+  <span class="k">struct</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"α"</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">min</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="o">-</span><span class="mf">1.</span><span class="n">f</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">max</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mf">1.</span><span class="n">f</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">float</span> <span class="n">value</span><span class="p">;</span>
+  <span class="p">}</span> <span class="n">alpha</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="p">{</span>
+    <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"β"</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">min</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">11</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">max</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">247</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
+  <span class="p">}</span> <span class="n">beta</span><span class="p">;</span>
+
+  <span class="kt">float</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">float</span> <span class="n">input</span><span class="p">)</span> <span class="k">const</span>
+  <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">fmod</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">alpha</span><span class="p">.</span><span class="n">value</span><span class="p">),</span> <span class="kt">float</span><span class="p">(</span><span class="n">beta</span><span class="p">.</span><span class="n">value</span><span class="p">))</span> <span class="o">/</span> <span class="n">beta</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span></code></pre></figure>
+
+<p>There isn’t a lot of wiggle room to improve. It is not possible to have static member variables in anonymous structs ; if one is willing to duplicate the name of the struct, it’s possible to get things down to:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">alpha</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"α"</span><span class="p">;</span>
+  <span class="k">static</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">min</span>  <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span><span class="n">f</span><span class="p">;</span>
+  <span class="k">static</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">max</span>  <span class="o">=</span>  <span class="mf">1.</span><span class="n">f</span><span class="p">;</span>
+  <span class="kt">float</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">alpha</span><span class="p">;</span></code></pre></figure>
+
+<h4 id="how-user-defined-attributes-and-attribute-reflection-would-help">How user-defined attributes and attribute reflection would help</h4>
+<p>Now, if we were in, say, C#, what we’d most likely write instead would instead just be:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="p">[</span><span class="nf">Name</span><span class="p">(</span><span class="s">"α"</span><span class="p">)]</span>
+<span class="p">[</span><span class="nf">Range</span><span class="p">(</span><span class="n">min</span> <span class="p">=</span> <span class="p">-</span><span class="m">1.f</span><span class="p">,</span> <span class="n">max</span> <span class="p">=</span> <span class="m">1.f</span><span class="p">)]</span>
+<span class="kt">float</span> <span class="n">alpha</span><span class="p">;</span></code></pre></figure>
+
+<p>Simpler, isn’t it ?
+How neat would it be if we had <a href="https://manu343726.github.io/2019-07-14-reflections-on-user-defined-attributes/">the same thing</a> in C++ ! There is some work towards that in Clang and the <a href="https://github.com/lock3/meta/issues/215">lock3/meta metaclasses clang fork</a>.</p>
+
+<p>We could even try (okay, that’s a little bit far-fetched) to read the pre/post conditions from C++ contract specification when it finally lands, in order to have to specify it only once !</p>
+
+<p>Although in practice some methods may be needed: for instance, multiple APIs require the user to provide a method which will from an input value, render a string to show to the user.</p>
+
+<h3 id="updating-our-binding-code">Updating our binding code</h3>
+<p>We now have to go back and work on the binding function implementation: the main issue is that where we were using the actual type of the values, <code class="language-plaintext highlighter-rouge">boost::pfr::for_each_field</code> will give us references to anonymous types (or, even if not anonymous, types that we shouldn’t have knowledge of in our binding code).</p>
+
+<p>In our case, we assume (as part of our ontology), that <em>parameters</em> have a <em>value</em>. This is a compile-time protocol.</p>
+
+<p>Thankfully, a C++20 feature, concepts, makes encoding compile-time protocols in code fairly easy.
+Consider a member of our earlier visitor:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="o">???&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span>
+<span class="p">{</span>
+  <span class="n">lib_add_float</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="o">???</span><span class="p">,</span> <span class="o">???</span><span class="p">,</span> <span class="o">???</span><span class="p">,</span> <span class="o">???</span><span class="p">);</span> 
+<span class="err">}</span></code></pre></figure>
+
+<p>We can for instance fill it that way :</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="c1">// we are writing the binding code, here everything is allowed !</span>
+<span class="cp">#include &lt;concepts&gt;
+</span><span class="p">...</span>
+<span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span>
+  <span class="n">requires</span> <span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">value</span><span class="p">),</span> <span class="kt">float</span><span class="o">&gt;</span>
+<span class="p">{</span>
+  <span class="n">lib_add_float</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">name</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">f</span><span class="p">.</span><span class="n">max</span><span class="p">());</span>
+<span class="err">}</span></code></pre></figure>
+
+<p>And that would work with our current <code class="language-plaintext highlighter-rouge">noise</code> implementation.
+But what if the program author forgets to implement the <code class="language-plaintext highlighter-rouge">name()</code> method ? Mainly a not-so-terrible compile error:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;:</span><span class="mi">30</span><span class="o">:</span><span class="mi">23</span><span class="o">:</span> <span class="n">error</span><span class="o">:</span> <span class="n">no</span> <span class="n">member</span> <span class="n">named</span> <span class="err">'</span><span class="n">name</span><span class="err">'</span> <span class="n">in</span> <span class="err">'</span><span class="n">noise</span><span class="o">::</span><span class="p">(</span><span class="n">anonymous</span> <span class="k">struct</span> <span class="nc">at</span> <span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;:</span><span class="mi">18</span><span class="o">:</span><span class="mi">5</span><span class="p">)</span><span class="err">'</span>
+  <span class="n">lib_add_float</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">name</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">f</span><span class="p">.</span><span class="n">max</span><span class="p">());</span>
+                    <span class="o">~</span> <span class="o">^</span>
+<span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;:</span><span class="mi">48</span><span class="o">:</span><span class="mi">12</span><span class="o">:</span> <span class="n">note</span><span class="o">:</span> <span class="n">in</span> <span class="n">instantiation</span> <span class="n">of</span> <span class="n">function</span> <span class="k">template</span> <span class="n">specialization</span> <span class="err">'</span><span class="p">(</span><span class="n">anonymous</span> <span class="k">struct</span><span class="p">)</span><span class="o">::</span><span class="k">operator</span><span class="p">()</span><span class="o">&lt;</span><span class="n">noise</span><span class="o">::</span><span class="p">(</span><span class="n">anonymous</span> <span class="k">struct</span> <span class="nc">at</span> <span class="o">&lt;</span><span class="n">source</span><span class="p">&gt;</span><span class="o">:</span><span class="mi">18</span><span class="o">:</span><span class="mi">5</span><span class="p">)</span><span class="o">&gt;</span><span class="err">'</span> <span class="n">requested</span> <span class="n">here</span>
+    <span class="nf">visitor</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">alpha</span><span class="p">);</span>
+           <span class="o">^</span></code></pre></figure>
+
+<p>If our API absolutely requires a <code class="language-plaintext highlighter-rouge">name()</code>, and a <code class="language-plaintext highlighter-rouge">value</code>, concepts are very helpful:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Value_T</span><span class="p">&gt;</span>
+<span class="n">concept</span> <span class="n">parameter</span> <span class="o">=</span> <span class="n">requires</span> <span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">{</span> <span class="n">t</span><span class="p">.</span><span class="n">value</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="n">Value_T</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="p">{</span> <span class="n">t</span><span class="p">.</span><span class="n">min</span><span class="p">()</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="n">Value_T</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="p">{</span> <span class="n">t</span><span class="p">.</span><span class="n">max</span><span class="p">()</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="n">Value_T</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="p">{</span> <span class="n">t</span><span class="p">.</span><span class="n">name</span><span class="p">()</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">char</span><span class="o">*&gt;</span><span class="p">;</span>
+<span class="p">};</span></code></pre></figure>
+
+<p>Our code becomes:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span><span class="n">parameter</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span>
+<span class="p">{</span>
+  <span class="n">lib_add_float</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">name</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">f</span><span class="p">.</span><span class="n">max</span><span class="p">());</span>
+<span class="err">}</span></code></pre></figure>
+
+<p>Forgetting to implement <code class="language-plaintext highlighter-rouge">name()</code> now results in:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;:</span><span class="mi">44</span><span class="o">:</span><span class="mi">5</span><span class="o">:</span> <span class="n">error</span><span class="o">:</span> <span class="n">no</span> <span class="n">matching</span> <span class="n">function</span> <span class="k">for</span> <span class="n">call</span> <span class="n">to</span> <span class="n">object</span> <span class="n">of</span> <span class="n">type</span> <span class="err">'</span><span class="k">struct</span> <span class="p">(</span><span class="n">anonymous</span> <span class="k">struct</span> <span class="nc">at</span> <span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;:</span><span class="mi">34</span><span class="o">:</span><span class="mi">5</span><span class="p">)</span><span class="err">'</span>
+    <span class="n">visitor</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">alpha</span><span class="p">);</span>
+    <span class="o">^~~~~~~</span>
+<span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;:</span><span class="mi">35</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span> <span class="n">note</span><span class="o">:</span> <span class="n">candidate</span> <span class="k">template</span> <span class="n">ignored</span><span class="o">:</span> <span class="n">constraints</span> <span class="n">not</span> <span class="n">satisfied</span> <span class="p">[</span><span class="n">with</span> <span class="n">f</span><span class="o">:</span><span class="k">auto</span> <span class="o">=</span> <span class="n">noise</span><span class="o">::</span><span class="p">(</span><span class="n">anonymous</span> <span class="k">struct</span> <span class="nc">at</span> <span class="o">&lt;</span><span class="n">source</span><span class="p">&gt;</span><span class="o">:</span><span class="mi">18</span><span class="o">:</span><span class="mi">5</span><span class="p">)]</span>
+        <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="n">parameter</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span>
+             <span class="o">^</span>
+<span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;:</span><span class="mi">35</span><span class="o">:</span><span class="mi">25</span><span class="o">:</span> <span class="n">note</span><span class="o">:</span> <span class="n">because</span> <span class="err">'</span><span class="n">parameter</span><span class="o">&lt;</span><span class="n">noise</span><span class="o">::</span><span class="p">(</span><span class="n">anonymous</span> <span class="k">struct</span> <span class="nc">at</span> <span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;:</span><span class="mi">18</span><span class="o">:</span><span class="mi">5</span><span class="p">),</span> <span class="kt">float</span><span class="o">&gt;</span><span class="err">'</span> <span class="n">evaluated</span> <span class="n">to</span> <span class="nb">false</span>
+        <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="n">parameter</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span>
+                        <span class="o">^</span>
+<span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;:</span><span class="mi">29</span><span class="o">:</span><span class="mi">7</span><span class="o">:</span> <span class="n">note</span><span class="o">:</span> <span class="n">because</span> <span class="err">'</span><span class="n">t</span><span class="p">.</span><span class="n">min</span><span class="p">()</span><span class="err">'</span> <span class="n">would</span> <span class="n">be</span> <span class="n">invalid</span><span class="o">:</span> <span class="n">no</span> <span class="n">member</span> <span class="n">named</span> <span class="err">'</span><span class="n">min</span><span class="err">'</span> <span class="n">in</span> <span class="err">'</span><span class="n">noise</span><span class="o">::</span><span class="p">(</span><span class="n">anonymous</span> <span class="k">struct</span> <span class="nc">at</span> <span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;:</span><span class="mi">18</span><span class="o">:</span><span class="mi">5</span><span class="p">)</span><span class="err">'</span>
+  <span class="p">{</span> <span class="n">t</span><span class="p">.</span><span class="n">min</span><span class="p">()</span> <span class="p">}</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="n">Value_T</span><span class="o">&gt;</span><span class="p">;</span>
+      <span class="o">^</span></code></pre></figure>
+
+<p>Whether that constitutes an improvement in readability of errors in our specific case is left as an exercise to the reader.</p>
+
+<p>But, what if our algorithm <em>doesn’t</em> actually need bounds ? We’d still want it to work in a bounded host system, right ? The host system would just choose arbitrary bounds that make sense for e.g. an input widget.</p>
+
+<p>In this case, we’d get a combinatorial explosion of concepts: we’d need an overload for a parameter with a name and no range, an overload for a parameter with a range and no name, etc.</p>
+
+<h3 id="handling-optionality">Handling optionality</h3>
+<p>As an algorithm author, you cannot specify every possible metadata known to man. We want our algorithm to be future-proof: even if refinements can be added, we want the code we write today to still be able to integrate into tomorrow’s host.</p>
+
+<p>Thankfully, the age-old notion of condition can help here ; in particular compile-time conditions depending on the existence of a member.</p>
+
+<p>C++20 makes that trivial:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span>
+  <span class="c1">// We still need our "requires" here, or a simpler concept</span>
+  <span class="c1">// in order to have the right overload be selected.</span>
+  <span class="n">requires</span> <span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">value</span><span class="p">),</span> <span class="kt">float</span><span class="o">&gt;</span>
+<span class="p">{</span>
+  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"Parameter"</span><span class="p">;</span>
+  <span class="kt">float</span> <span class="n">min</span> <span class="o">=</span> <span class="mf">0.</span><span class="n">f</span><span class="p">,</span> <span class="n">max</span> <span class="o">=</span> <span class="mf">1.</span><span class="n">f</span><span class="p">;</span>
+  <span class="k">if</span> <span class="k">constexpr</span><span class="p">(</span><span class="n">requires</span> <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">name</span><span class="p">();</span> <span class="p">})</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">name</span><span class="p">();</span>
+  <span class="k">if</span> <span class="k">constexpr</span><span class="p">(</span><span class="n">requires</span> <span class="p">{</span> <span class="n">min</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">min</span><span class="p">();</span> <span class="p">})</span>
+    <span class="n">min</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">min</span><span class="p">();</span>
+  <span class="k">if</span> <span class="k">constexpr</span><span class="p">(</span><span class="n">requires</span> <span class="p">{</span> <span class="n">max</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">max</span><span class="p">();</span> <span class="p">})</span>
+    <span class="n">max</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">max</span><span class="p">();</span>
+
+  <span class="n">lib_add_float</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">min</span><span class="p">,</span> <span class="n">max</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>This way, the algorithm has maximal flexibility: it can provide the bare minimal metadata for a proof-of-concept, or give as much information as possible.</p>
+
+<p>This last part works in Clang and GCC, but MSVC’s concepts implementation <a href="https://www.reddit.com/r/cpp/comments/old0t6/why_does_msvc_blatantly_lies_about_its_supported/">does not support it yet</a>.</p>
+
+<h3 id="calling-our-code">Calling our code</h3>
+
+<p>There’s not much difference with the previous technique when we want to call our process (<code class="language-plaintext highlighter-rouge">operator()</code>) function.</p>
+
+<p>What we cannot do without reflection &amp; code generation (metaclasses) is an entirely generic transformation from one of our algorithm’s processing method, which, depending on the problem domain, could have any number of inputs / outputs of various types, to arbitrary run-time data. For instance, audio processors generally have inputs and outputs in the form of an array of channels of float / double values, plus the amount of data to be processed:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">canonical_audio_processor</span><span class="p">(</span><span class="kt">float</span><span class="o">**</span> <span class="n">inputs</span><span class="p">,</span> <span class="kt">float</span><span class="o">**</span> <span class="n">outputs</span><span class="p">,</span> <span class="kt">int</span> <span class="n">frames_to_process</span><span class="p">);</span></code></pre></figure>
+
+<p>While image processors would instead look like:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">canonical_image_processor</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">);</span></code></pre></figure>
+
+<p>There’s no practical way to enumerate all the possible sets of arguments.</p>
+
+<p>Thus, the author of the binding code has the responsibility of adapting the expected ontology for algorithms to the API we are binding to.</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">bind_to_lib</span> <span class="p">{</span>
+  <span class="n">lib_type_t</span> <span class="n">handle</span><span class="p">;</span>
+  
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+  <span class="kt">void</span> <span class="n">register_process</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">algo</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">process</span> <span class="o">=</span> <span class="p">[]</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">context</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">in</span><span class="p">)</span> <span class="p">{</span> 
+      <span class="n">T</span><span class="o">&amp;</span> <span class="n">algo</span> <span class="o">=</span> <span class="o">*</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+      <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">algo</span><span class="p">(</span><span class="o">*</span><span class="n">in</span><span class="p">);</span>
+    <span class="p">};</span>
+    <span class="n">lib_add_method</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">"process"</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">process</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">algo</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Nothing prevents multiple cases to be handled: for instance, some plug-ins may have a more efficient, array-based, implementation for their process ; some hosts may be able to use that if available:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">register_process</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">algo</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span> <span class="k">constexpr</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">invocable</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">process</span> <span class="o">=</span> <span class="p">[]</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">context</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">in</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// ...</span>
+      <span class="n">algo</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span> 
+    <span class="p">};</span>
+    <span class="n">lib_add_method</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">"process_array"</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">process</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">algo</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="k">constexpr</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">invocable</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">float</span><span class="p">,</span> <span class="kt">float</span><span class="o">&gt;</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">process</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">context</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">in</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// ...</span>
+      <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">algo</span><span class="p">(</span><span class="o">*</span><span class="n">in</span><span class="p">);</span>
+    <span class="p">};</span>
+    <span class="n">lib_add_method</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">"process"</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">process</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">algo</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>An host which only supports array-based computations would instead write:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">register_process</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">algo</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span> <span class="k">constexpr</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">invocable</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">process</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]</span> <span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">in</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// ...</span>
+      <span class="n">algo</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+    <span class="p">};</span>
+    <span class="n">lib_add_method</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">"process"</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">process</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">algo</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="k">constexpr</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">invocable</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">float</span><span class="p">,</span> <span class="kt">float</span><span class="o">&gt;</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">process</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]</span> <span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">in</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// ...</span>
+      <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0U</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">algo</span><span class="p">(</span><span class="n">in</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">};</span>
+    <span class="n">lib_add_method</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">"process"</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">process</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">algo</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">);</span>
+  <span class="p">}</span> 
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="going-thread-safe">Going thread-safe</h3>
+
+<p>Suppose that our C host API specifies that the <code class="language-plaintext highlighter-rouge">process</code> method is run in a separate thread, for efficiency concerns.
+Such an API’s <code class="language-plaintext highlighter-rouge">lib_add_float</code> function could look like this:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">lib_add_float</span><span class="p">(</span>
+  <span class="n">lib_type_t</span> <span class="n">handle</span><span class="p">,</span> 
+  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">,</span> 
+  <span class="kt">float</span> <span class="p">(</span><span class="o">*</span><span class="n">getter</span><span class="p">)(</span><span class="kt">void</span><span class="o">*</span><span class="p">),</span>
+  <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">setter</span><span class="p">)(</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="kt">float</span><span class="p">),</span>
+  <span class="kt">void</span><span class="o">*</span> <span class="n">context</span>
+<span class="p">);</span></code></pre></figure>
+
+<p>where <code class="language-plaintext highlighter-rouge">context</code> would be an object passed to <code class="language-plaintext highlighter-rouge">getter</code> and <code class="language-plaintext highlighter-rouge">setter</code> so that the actual float could be found.</p>
+
+<p><code class="language-plaintext highlighter-rouge">getter</code> and <code class="language-plaintext highlighter-rouge">setter</code> could be called from any of the host’s threads, e.g. the main or UI thread for instance, while <code class="language-plaintext highlighter-rouge">process</code> would be called from a separate thread specifically.</p>
+
+<p>Thus, our actual <code class="language-plaintext highlighter-rouge">float</code> needs some protection. Now, our program has the added requirement of not using locks: the algorithm could be used from a real-time system.</p>
+
+<p>What we can do is, transform our list of parameters into <code class="language-plaintext highlighter-rouge">atomic&lt;T&gt;</code> types, at compile-time.
+A simple way for this is through any of the common C++ type-based metaprogramming libraries, which are able to transform tuples: in our case we’ll use Boost.MP11 ; other alternatives are Brigand, Metal, etc.</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">binding_to_lib</span> <span class="p">{</span>
+  <span class="c1">// parameters_type will look like tuple&lt;float, int&gt;</span>
+  <span class="k">using</span> <span class="n">parameters_type</span> <span class="o">=</span> <span class="k">decltype</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">pfr</span><span class="o">::</span><span class="n">structure_to_tuple</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">declval</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;&gt;</span><span class="p">()));</span> 
+  
+  <span class="c1">// parameters_type will look like tuple&lt;std::atomic&lt;float&gt;, std::atomic&lt;int&gt;&gt;</span>
+  <span class="k">using</span> <span class="n">atomic_type</span> <span class="o">=</span> <span class="n">mp_transform</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="p">,</span> <span class="n">parameters_type</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// our algorithm's aggregate struct, we're allocating it as part of the binding for more simplicity</span>
+  <span class="n">T</span> <span class="n">implementation</span><span class="p">;</span>
+  
+  <span class="n">atomic_type</span> <span class="n">parameters</span><span class="p">;</span>
+  
+  <span class="n">binding_to_lib</span><span class="p">()</span> <span class="p">{</span> <span class="cm">/* register everything with the host API */</span> <span class="p">}</span>
+<span class="p">};</span></code></pre></figure>
+
+<p>From this, our binding methods would be changed to look like:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">register_process</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="k">auto</span> <span class="n">process</span> <span class="o">=</span> <span class="p">[]</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">context</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">in</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Get our objects back from the context pointer</span>
+    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">self</span> <span class="o">=</span> <span class="o">*</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="o">&gt;</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+    <span class="n">T</span><span class="o">&amp;</span> <span class="n">algo</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">implementation</span><span class="p">;</span>
+
+    <span class="c1">// Load all the atomics into the "algo" object</span>
+    <span class="n">load_all_atomics</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">parameters</span><span class="p">,</span> <span class="n">boost</span><span class="o">::</span><span class="n">pfr</span><span class="o">::</span><span class="n">structure_tie</span><span class="p">(</span><span class="n">algo</span><span class="p">));</span>
+
+    <span class="c1">// Apply the algo</span>
+    <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">algo</span><span class="p">(</span><span class="o">*</span><span class="n">in</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="n">lib_add_method</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">"process"</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">process</span><span class="p">),</span> <span class="k">this</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">,</span> <span class="n">kFloat</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">load_all_atomics</span><span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">atomics</span><span class="p">,</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">actual</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="p">[</span><span class="o">&amp;</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">...</span> <span class="n">Index</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">integer_sequence</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">,</span> <span class="n">Index</span><span class="p">...</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">pfr</span><span class="p">;</span>
+    <span class="p">((</span><span class="n">get</span><span class="o">&lt;</span><span class="n">Index</span><span class="o">&gt;</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span> <span class="o">=</span> <span class="n">get</span><span class="o">&lt;</span><span class="n">Index</span><span class="o">&gt;</span><span class="p">(</span><span class="n">atomics</span><span class="p">).</span><span class="n">load</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">memory_order_relaxed</span><span class="p">)),</span> <span class="p">...);</span>
+  <span class="p">}(</span><span class="n">std</span><span class="o">::</span><span class="n">make_index_sequence</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple_size_v</span><span class="o">&lt;</span><span class="n">parameters_type</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>The <code class="language-plaintext highlighter-rouge">load_all_atomics</code> function is a bit dense to read, here’s a spaced-out and simplified version:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">load_all_atomics</span><span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">atomics</span><span class="p">,</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">actual</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">// Template lambda (C++20 feature): one used to have to write a separate</span>
+  <span class="c1">// load_all_atomics_helper function as there was no way to retrieve the parameter pack,</span>
+  <span class="c1">// which pollutes the namespace</span>
+  <span class="k">auto</span> <span class="n">helper</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">...</span> <span class="n">Index</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">integer_sequence</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">,</span> <span class="n">Index</span><span class="p">...</span><span class="o">&gt;</span><span class="p">)</span> 
+  <span class="p">{</span>
+    <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">pfr</span><span class="p">;</span> <span class="c1">// for `get`</span>
+
+    <span class="c1">// Fold expression which goes through every member of the tuples - which have the same size.</span>
+    <span class="c1">// If we don't choose a memory order for loading, it defaults to the safest but also least efficient sequentially-consistent order, which does not matter here: our parameters are all entirely independent, we just care about the atomic access to the variable itself (famous last words).</span>
+    <span class="p">((</span><span class="n">get</span><span class="o">&lt;</span><span class="n">Index</span><span class="o">&gt;</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span> <span class="o">=</span> <span class="n">get</span><span class="o">&lt;</span><span class="n">Index</span><span class="o">&gt;</span><span class="p">(</span><span class="n">atomics</span><span class="p">)),</span> <span class="p">...);</span>
+    <span class="c1">// ^ equivalent to</span>
+    <span class="c1">// get&lt;0&gt;(actual) = get&lt;0&gt;(atomics);</span>
+    <span class="c1">// get&lt;1&gt;(actual) = get&lt;1&gt;(atomics);</span>
+    <span class="c1">// get&lt;2&gt;(actual) = get&lt;2&gt;(atomics);</span>
+  <span class="p">};</span>
+  
+  <span class="c1">// std::integer_sequence&lt;std::size_t, 1, 2&gt;</span>
+  <span class="k">auto</span> <span class="n">sequence</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_index_sequence</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple_size_v</span><span class="o">&lt;</span><span class="n">parameters_type</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+
+  <span class="c1">// Call our lambda</span>
+  <span class="n">helper</span><span class="p">(</span><span class="n">sequence</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Note that in the end, compilers will happily inline all that into a couple of <a href="https://gcc.godbolt.org/z/K87hWfsq7"><code class="language-plaintext highlighter-rouge">mov</code> instructions</a> :-)</p>
+
+<p>Its conjugate function, <code class="language-plaintext highlighter-rouge">store_all_atomics</code> is left as an exercise to the reader.</p>
+
+<p>Another interesting function that one can write is the function that will perform an operation on the nth parameter, <code class="language-plaintext highlighter-rouge">n</code> being known only at run-time, as some APIs are index-based instead of pointer-based: parameters are identified through an index.</p>
+
+<p>Here’s a solution I found, which Clang is able to optimize pretty well through what looks like a loop recombination optimization, but other compilers <a href="https://gcc.godbolt.org/z/Y98shbccP">sadly don’t manage to</a>:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Parameters</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">F</span><span class="p">&gt;</span>
+<span class="kt">void</span> <span class="nf">for_nth_parameter</span><span class="p">(</span><span class="n">Parameters</span><span class="o">&amp;</span> <span class="n">params</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">F</span><span class="o">&amp;&amp;</span> <span class="n">func</span><span class="p">)</span> <span class="k">noexcept</span>
+<span class="p">{</span>
+  <span class="p">[</span><span class="o">&amp;</span><span class="p">]</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">...</span> <span class="n">Index</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">integer_sequence</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">,</span> <span class="n">Index</span><span class="p">...</span><span class="o">&gt;</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="p">((</span><span class="kt">void</span><span class="p">)(</span><span class="n">Index</span> <span class="o">==</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">pfr</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="n">Index</span><span class="o">&gt;</span><span class="p">(</span><span class="n">params</span><span class="p">)),</span> <span class="nb">true</span><span class="p">)),</span> <span class="p">...);</span>
+  <span class="p">}</span>
+  <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_index_sequence</span><span class="o">&lt;</span><span class="n">boost</span><span class="o">::</span><span class="n">pfr</span><span class="o">::</span><span class="n">tuple_size_v</span><span class="o">&lt;</span><span class="n">Parameters</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+<span class="err">}</span></code></pre></figure>
+
+<h1 id="conclusion">Conclusion</h1>
+<p>From this, it is obvious that writing, for instance, a generic serializer, hash function, etc… that will work on any such types is trivial ; Boost.PFR already provides some amount of it. A fun exercise left to the reader would be memoization of plug-in state, for the sake of undo-redo.</p>
+
+<p>Note that the algorithm could also easily be generic ; for instance, some audio plug-in APIs support working with either single- or double- precision floating-point ; one could just provide a <code class="language-plaintext highlighter-rouge">noise&lt;std::floating_point&gt;</code> algorithm if it fits the algorithm’s spec. Otherwise, the binding library would simply perform the conversion from / to the correct floating-point type if that is a meaningful thing to do.</p>
+
+<p>This concept has been prototyped in, first, an API for writing plug-ins for <a href="https://github.com/jcelerier/score-simple-api-2">ossia score</a>, and then in a tentative for writing audio plug-ins, <a href="https://github.com/jcelerier/vintage/blob/main/examples/audio_effect/distortion.cpp">vintage</a>.</p>
+
+<p>There is one last drop of manual binding code to write: the code that ties the algorithm to the API.</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="c1">// main.cpp</span>
+<span class="cp">#include &lt;noise.hpp&gt;
+#include &lt;bind_to_lib.hpp&gt;
+</span><span class="k">extern</span> <span class="s">"C"</span> 
+<span class="n">DLL_EXPORT_MACRO</span>
+<span class="kt">void</span> <span class="nf">plugin_main_function</span><span class="p">()</span> <span class="p">{</span> <span class="n">bind_to_lib</span><span class="o">&lt;</span><span class="n">noise</span><span class="o">&gt;</span><span class="p">();</span> <span class="p">}</span></code></pre></figure>
+
+<p>There is no easy way without full static reflection to bypass that drop of code: we have to reference the name of our algorithm in the same line than our binding code at least once ; full reflection would allow to enumerate the available types instead and skip that part. There are two band-aid solutions:</p>
+
+<ul>
+  <li>State that the class containing the algorithm must have a specific name, e.g. <code class="language-plaintext highlighter-rouge">Plugin</code>. This does not really scale if for instance a software would like to build and bundle multiple such plug-ins statically, due to ODR ; it can be made to work with shared objects if one takes care of hiding all symbols except <code class="language-plaintext highlighter-rouge">plugin_main_function</code>.</li>
+  <li>Generate that code in the build system: one could easily provide a set of e.g. <code class="language-plaintext highlighter-rouge">bind_algorithm(&lt;name&gt; &lt;main_source_file&gt;)</code> CMake function which would generate the appropriate <code class="language-plaintext highlighter-rouge">.cpp</code> ; the act of porting the algorithm to a new host platform would simply be for instance forking a template repo on GitHub, and replacing the content of an <code class="language-plaintext highlighter-rouge">src/algorithm.cpp</code> file.</li>
+</ul>
+
+<p>So, in the end, what we have, roughly, is:</p>
+<ul>
+  <li>Algorithms without dependencies on host APIs for exposing themselves to GUI software, etc.</li>
+  <li>Independent introspection of these algorithms.</li>
+</ul>
+
+<p>What remains is, as a community, to specify the ontologies / concepts that a given algorithm can be made to fit in: for instance, for audio plug-ins, the <a href="https://lv2plug.in/ns/">LV2 specification</a> has done a great deal of work towards that ; similar work could be done for graphics algorithms, serialization systems, etc.</p>
+
+<p>This work could be encoded in C++ concepts, maybe with inspiration from the various Haskell typeclasses or Rust traits libraries: then, if as an algorithm author I want to make sure that my algorithm will be able to be used by audio, video, … software, I’d just clone a concept-checking library and see which concepts my code does (and does not) support ; an algorithm which takes a float and outputs a float would likely have a very wide applicability.</p>
+
+<p>A further blog article will present how one can leverage this to build data-flow graphs either at compile-time or at run-time.</p>
+
+  </section>
+  <section class="wrapper container nav">
+       
+        <a href="/posts/summer-internships/" class="post-nav" style="float: left; text-align: left; ">&larr; <strong class="post-nav-title">Summer internships</strong></a>
+        
+
+        <div style="position: absolute; left: 50%;">
+            <a href="/blog.html" class="post-nav" style="position: relative; left: -50%;"><strong class="post-nav-title">Back to all posts</strong></a>
+        </div>
+
+        
+</section>
+
+</article>
+
+
+    </div>
+    <!-- Footer -->
+<footer id="footer">
+
+    <h4 class="follow-us">Follow us !</h4>
+    <ul class="icons">
+	<li><a href="https://twitter.com/ossia_io" class="icon circle"><img src="/css/images/social_media/Twitter_Social_Icon_Circle_Color.png" width="32px" alt="Twitter" /></a></li>
+	<li><a href="https://github.com/OSSIA/score" class="icon circle"><img src="/css/images/social_media/GitHub-Mark-Light-64px.png" width="32px" alt="GitHub" /></a></li>
+	<li><a href="https://vimeo.com/ossia" class="icon circle"><img src="/css/images/social_media/vimeo.png" width="32px" alt="Vimeo"/></a></li>
+	<li><a href="https://www.youtube.com/channel/UCwghQysyNdstRfv8YUPyglw" class="icon circle"><img src="/css/images/social_media/youtube_social_circle_red.png" width="32px" alt="YouTube"/></a></li>
+	<li><a href="https://www.facebook.com/ossia.io" class="icon circle"><img src="/css/images/social_media/f_logo_RGB-Blue_58.png" width="34px" alt="Facebook"/></a></li>
+    </ul>
+    <ul class="copyright">
+        <li>&copy; ossia 2021</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+    </ul>
+</footer>
+
+<script>
+$(function(){
+    $('.cat a').each(function(){
+    var category_name = "site-" + this.text;
+    if("Dev" ===  category_name){
+        $(this).addClass('active');
+        return false;
+    }
+    });
+});
+
+// load asynchronously videos to avoid slowing the page showing
+function init() {
+var vidDefer = document.getElementsByTagName('iframe');
+for (var i=0; i<vidDefer.length; i++) {
+if(vidDefer[i].getAttribute('data-src')) {
+vidDefer[i].setAttribute('src',vidDefer[i].getAttribute('data-src'));
+} } }
+window.onload = init;
+</script>
+
+
+  </body>
+</html>

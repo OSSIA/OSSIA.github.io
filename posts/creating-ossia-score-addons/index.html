@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!--
+	Twenty by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+  <title>
+    Creating ossia score add-ons
+  </title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="Open Software System for Interactive Applications - home of ossia score, a free, open-source, cross-platform intermedia sequencer for precise and flexible scripting of interactive scenarios.
+" />
+  <meta
+    name="keywords"
+    content="ossia, score, libossia, sequencer, interactive art, intermedia, new media art, osc, open sound control, midi, oscquery"
+  />
+
+  
+  <link rel="shortcut icon" type="image/png" href="/assets/score-logo.png" />
+  <noscript>
+    <link rel="stylesheet" href="/css/skel.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </noscript>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/skel.min.js"></script>
+  <script src="/js/skel-layers.min.js"></script>
+  <script src="/js/init.js"></script>
+
+  <meta name="viewport" content="width=device-width" />
+
+  <link
+    rel="canonical"
+    href="https://ossia.io/posts/creating-ossia-score-addons/"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Catamaran:regular,bold,semi-bold,medium|Libre+Franklin:regular,bold,semi-bold,light,medium|Lato:regular,bold,semi-bold,light,medium"
+  />
+</head>
+<!-- <div id="cover"></div> -->
+
+
+  <body>
+
+    <header id="header">
+	<nav id="nav" style="vertical-align: middle; ">
+        <div id="ossia-logo-header" style="margin-left: 1em;" >
+            <a id="homebtn" class="home-logo" style="margin: 0;" href="/">
+                <image src="/assets/score-logo.png" height="45px" alt="score logo"/>
+                <h2 class="software small" style="padding: 0; padding-left: 0.2em;padding-bottom: 0.1em;">ossia</h2>
+            </a>
+        </div>
+        <div class="cat" style="flex-grow:1;">
+            <a href="/score/about.html">score</a>
+			<a href="/site-libossia/about.html">libossia</a>
+            <a href="/gallery.html">community</a>
+			<a href="/about.html">about</a>
+        </div>
+        <div>
+            <a href="https://forum.ossia.io/" target="_blank" style="padding-left: 0; padding-right: 1em;">forum</a>
+            <a href="https://gitter.im/OSSIA/score" target="_blank" style="padding:0; padding-right: 1em;">chat</a>
+             <a class="donate" href="https://opencollective.com/ossia" target="_blank" style="padding:0; padding-right: 1em;color: var(--orange);">donate</a>
+        </div>
+	</nav>
+</header>
+
+    <div class="page-content">
+          <article id="main">
+  <header class="special container">
+    <h2 class="post-title">Creating ossia score add-ons</h2>
+    <p class="post-meta">Dev  •  Jun 7, 2021  •  Jean-Michaël</p>
+  </header>
+
+  <section class="style4 wrapper container">
+    <h2 id="introduction">Introduction</h2>
+
+<p><em>ossia score</em> is a free and open-source <em>intermedia</em> sequencer: it allows to sequence not only sound files and MIDI like most Digital Audio Workstations, but also JavaScript scripts, videos and visual effects on the GPU, OSC, DMX and a whole lot of communication protocols.</p>
+
+<p>This article is an introductory tutorial about writing and distributing add-ons for <em>ossia score</em> ; it presents the technology used, the tools put in place to help writing such add-ons, showcases the available APIs and explains how it differs from other common plug-in APIs.</p>
+
+<h2 id="tech-stack">Tech stack</h2>
+
+<p><em>score</em> add-ons are developped in C++20, like the rest of <em>score</em>. The main code-base still uses C++17 mostly to keep compatibility with Debian Stable’s native compiler (GCC 8) but add-ons should not restrain themselves as the official releases are built with Clang 12 which supports most of C++20.</p>
+
+<p>They are distributed in source form. We use LLVM and Clang to compile them with the most adapted settings on the users’s machine, as if the add-on was built with <code class="language-plaintext highlighter-rouge">-Ofast -march=native</code> (again, with the featureset of Clang / LLVM 12).
+This means that in a lot of case, math operations can be vectorized, which is really useful with audio algorithms for instance.</p>
+
+<p>The implementation is based on a lot of existing work - particularly useful resources were:</p>
+
+<ul>
+  <li><a href="https://github.com/weliveindetail/JitFromScratch">JitFromScratch</a></li>
+  <li><a href="https://wiki.nervtech.org">NERVTech Wiki</a></li>
+  <li>Following the LLVM mailing-list and the various ORC-JIT related topics.</li>
+</ul>
+
+<p>The source code for the JIT plug-in loading is entirely contained <a href="https://github.com/ossia/score/tree/master/src/plugins/score-plugin-jit/JitCpp">in this part of the score repository</a>.</p>
+
+<p>SDK headers are provided from the <em>score</em> package manager ; they are generated automatically for each release of <em>score</em> by the CI service. They are extracted into the user library automatically when downloaded from the package manager: <code class="language-plaintext highlighter-rouge">Documents/ossia score library/SDK/3.0.0-a39/usr/include/...</code>. It is currently possible to override that path with the <code class="language-plaintext highlighter-rouge">SCORE_JIT_SDK</code> environment variable, though a graphical configuration may make sense. They contain <em>ossia score</em> and <em>libossia</em>’s headers of course, but also Qt 5.15, boost 1.76, libav (ffmpeg 4.4), libc++, libc, etc… everything needed to create neat stuff.</p>
+
+<p>The most important thing is that the user does not have to install any compiler ; no tens-of-gigabytes of Visual Studio or XCode toolchains to install, just the <em>score</em> binary (a few hundred megabytes) and the SDK headers (another few hundred megabytes).</p>
+
+<h3 id="features-provided">Features provided</h3>
+
+<p>The Clang / LLVM JIT feature is used for:</p>
+<ul>
+  <li>Compiling add-ons which add new processes, features, etc. to the software. Pretty much the entirety of <em>ossia score</em> can be changed that way.</li>
+  <li>Compiling <a href="https://ossia.io/score-docs/processes/bytebeat.html">Bytebeat</a> expressions.</li>
+  <li>A simple <a href="https://ossia.io/score-docs/processes/texgen.html">CPU texture generator</a> for retro, analog video synth-like effects.</li>
+  <li>The <a href="https://ossia.io/score-docs/processes/cpp_jit.html">C++ JIT Process</a> is an experiment in providing very simple computation nodes without much type safety. It uses the libossia API for graph nodes (<a href="https://github.com/ossia/libossia/blob/master/src/ossia/dataflow/nodes/merger.hpp">example</a>).</li>
+</ul>
+
+<h3 id="current-restrictions">Current restrictions</h3>
+
+<p>Since LLVM’s LLJIT work is still an ongoing work-in-progress, some features may be missing (or slightly more buggy :p).</p>
+
+<h4 id="no-thread_local">No thread_local</h4>
+
+<p>For instance, I encountered issues with <code class="language-plaintext highlighter-rouge">thread_local</code> on macOS – apparently, the relocations used aren’t supported by LLJIT yet, given the <code class="language-plaintext highlighter-rouge">MachO TLV relocations not yet supported</code> error I was getting whenever <code class="language-plaintext highlighter-rouge">thread_local</code> or <code class="language-plaintext highlighter-rouge">__thread</code> were used.</p>
+
+<p>Thankfully, it was used in only two places: in the <a href="https://github.com/gabime/spdlog">spdlog</a> library used for logging (which could be disabled with <code class="language-plaintext highlighter-rouge">-DSPDLOG_NO_TLS=1</code>) and in Cameron Desrochers’s well-known <a href="https://github.com/cameron314/concurrentqueue">lock-free MPMC queue</a>, which needed a small patch that the author kindly merged in less than an hour !</p>
+
+<p>In order to make the issue explicit, when building add-ons, using <code class="language-plaintext highlighter-rouge">thread_local</code> will give a compile error as the symbol has been redefined to <code class="language-plaintext highlighter-rouge">__do_not_use_thread_local__</code>.</p>
+
+<h4 id="exceptions-">Exceptions ?</h4>
+
+<p>Exceptions especially on Windows are still iffy from what can be read on various LLVM mailing-list topics – but you wouldn’t throw an exception from the audio thread anyways, would you :-)</p>
+
+<p>On Linux and Mac they seem to work.</p>
+
+<h3 id="what-we-gain--performance">What we gain : performance</h3>
+
+<p>The main benefit is the performance win of building add-ons in a way that will leverage (as much as LLVM and Clang’s optimizers permit) the users’s CPU features.</p>
+
+<p>In particular, even in 2021 we found out that it isn’t possible to raise the baseline for distributed binaries past the x86_64 defaults (<code class="language-plaintext highlighter-rouge">-march=x86_64</code>): I had tried to release versions with a Sandy Bridge (yes, a ten year old CPU) baseline and even that was too much for some users:</p>
+
+<ul>
+  <li><a href="https://github.com/ossia/score/issues/1140">Issue #1140</a></li>
+  <li><a href="https://github.com/ossia/score/issues/1013">Issue #1013</a></li>
+</ul>
+
+<p>Thus, the main x86_64 binaries aren’t particularly optimized besides what SSE2 (mandatory with x86_64) offers in order to allow everyone to use it. For reference, the official ARM binaries use a Raspberry Pi 3 baseline, tuned for the Pi 4 CPU - they will work on Pi 3 and Pi 4 but the performance on the Pi 4 is much better as we are able to handle OSC, video processing, multi-channel audio without issues.</p>
+
+<p>When doing tests <a href="https://lac.linuxaudio.org/2019/doc/celerier.pdf">back in 2019</a>, the benefits of using more recent vector instructions was a no-brainer ; going from <code class="language-plaintext highlighter-rouge">-march=x86_64</code> to <code class="language-plaintext highlighter-rouge">-march=native</code> makes some effects run roughly twice as fast (which means that as musicians, we can stack a few dozen more choruses and reverbs in that effect chain ;p).</p>
+
+<h3 id="what-we-gain--simplicity-and-coherence">What we gain : simplicity and coherence</h3>
+
+<p>As mentioned before, <em>score</em>’s official releases are built against one single platform: Clang / LLVM 12 (which implies lld-12, and libc++-12). This is the case on Windows (thanks to <a href="https://github.com/mstorsjo/llvm-mingw">the llvm-mingw project of Martin Storsjö</a>), on Linux with custom-built toolchains (build scripts <a href="https://github.com/ossia/sdk">in the ossia/sdk repo</a>) and on Mac ; on Mac this is already the version shipped by Xcode so we use that one. We also use Emscripten for the <a href="https://ossia.io/score-web">WebAssembly builds</a> which are right now on a patched version of LLVM 13, but this is more of an experiment than an actual product.</p>
+
+<p>macOS using libc++ actually make things harder – at some point I tried to built my own libc++ (in order to be able to provide <code class="language-plaintext highlighter-rouge">std::optional</code> and <code class="language-plaintext highlighter-rouge">std::variant</code> before 10.14 ; see e.g. <a href="https://stackoverflow.com/questions/52521388/stdvariantget-does-not-compile-with-apple-llvm-10-0">this StackOverflow question</a>for the issues caused by Apple tying standard C++ library version to operating system versions). Sadly this caused a lot of obscure crashes when linking against Apple frameworks: a few of them are implemented in C++ (in particular I noticed a stack trace going into <code class="language-plaintext highlighter-rouge">nlohmann::json</code> recently in one of these frameworks). Thus using multiple different versions of the standard library caused deep ODR issues which mainly manifested as crashes when using those frameworks (which Qt does heavily for instance).</p>
+
+<p>The main benefit is that one can expect a plug-in to perform the same no matter the platform: no surprises because of implementation differences of <code class="language-plaintext highlighter-rouge">std::regex</code> or <code class="language-plaintext highlighter-rouge">std::unordered_map</code> (which generally tend to manifest in rare and hard-to-debug edge cases), implementation-defined behaviour, or features being implemented or not depending on the stdlib used.</p>
+
+<p>Building the add-ons from source also mean that there won’t be any ABI issues (as <em>score</em>’s API is C++ without any feature restriction). Add-ons are built against exactly the same headers, flags and defines than <em>score</em> itself. If there is a <em>score</em> update, the add-ons will be rebuilt automatically, which gives us some leeway as this means that only API compatibility is needed, a much easier guarantee to provide. This also means that if we improve the performance of some <em>score</em> feature or provided library, plug-ins will automatically benefit from it. That could mean, for instance, marking a <em>score</em> data type as using the <code class="language-plaintext highlighter-rouge">[[trivial_abi]]</code> attribute <a href="https://quuxplusone.github.io/blog/2018/05/02/trivial-abi-101/">provided by Clang</a> without fear that it breaks plug-ins, optimizing the field packing of a data type, switching to more efficient implementation of containers, etc.</p>
+
+<p>Some recent interesting discussions on C++ ABI comptibility (and what it implies) can be read / listened here:</p>
+
+<ul>
+  <li>On the recent <a href="https://www.youtube.com/watch?v=PueTm4nFrSQ">cppcast with Marshall Clow</a>.</li>
+  <li>On Cor3ntin’s very good blog post, <a href="https://cor3ntin.github.io/posts/abi/">The Day The Standard Library Died</a>.</li>
+</ul>
+
+<h3 id="what-we-lose--binary-size">What we lose : binary size</h3>
+
+<p>Since <em>score</em> add-ons can use any part of score or the libraries it uses (Qt, libav, boost, and even LLVM and libclang themselves), this means that most symbols need to be exported from <em>score</em>, which makes the executable… chonky. LLVM and libclang themselves account for roughly 60% of the chonk, it’s likely that this could be optimized a bit more.</p>
+
+<p>Needing to export symbols from a binary which statically-link against all its non-operating-system-provided dependencies made it clear that there is a <em>big</em> confusion out there on static libraries.</p>
+
+<p>For instance, it is necessary to patch Qt for it to export symbols even from static builds.</p>
+
+<p>A lot of other libraries have the following logic hardcoded:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#if defined(_WIN32)
+</span>  <span class="cp">#if MYLIB_SHARED
+</span>    <span class="cp">#if MYLIB_BUILD
+</span>      <span class="cp">#define MYLIB_EXPORT __declspec(dllexport)
+</span>    <span class="cp">#else
+</span>      <span class="cp">#define MYLIB_EXPORT __declspec(dllimport)
+</span>    <span class="cp">#endif
+</span>  <span class="cp">#else
+</span>    <span class="cp">#define MYLIB_EXPORT
+</span>  <span class="cp">#endif
+#else // if we're lucky - a lot of libraries just assume that people don't use -fvisibility=hidden at all on non-DLL platforms
+</span>  <span class="cp">#if MYLIB_SHARED
+</span>    <span class="cp">#if MYLIB_BUILD
+</span>      <span class="cp">#define MYLIB_EXPORT __attribute__((visibility=default))
+</span>    <span class="cp">#else
+</span>      <span class="cp">#define MYLIB_EXPORT __attribute__((visibility=hidden))
+</span>    <span class="cp">#endif
+</span>  <span class="cp">#else
+</span>    <span class="cp">#define MYLIB_EXPORT
+</span>  <span class="cp">#endif
+#endif</span></code></pre></figure>
+
+<p>This logic is <strong>wrong</strong> - one can build static libraries, or even executables, and still want to export symbols !</p>
+
+<p>In <em>score</em> there is a fork of the <a href="https://github.com/ossia/libossia/blob/master/cmake/GenerateStaticExport.cmake">GenerateExportHeader</a> CMake function where I added a parameter to allow exporting symbols from static libraries, maybe I should upstream it.</p>
+
+<h3 id="how-it-works">How it works</h3>
+
+<p>The actual design is very simple:</p>
+
+<ul>
+  <li><em>score</em> looks for add-ons in the user library, in the Addons and Nodes subfolders.</li>
+  <li>When any is found, first we hash the preprocessed source. This generally only takes a few hundred milliseconds.</li>
+  <li>If we find a bitcode file with the corresponding hash (stored in the users’s cache folder) we pass it to LLJIT directly.</li>
+  <li>Otherwise we invoke clang and ask it to generate LLVM bitcode, which is cached in the users’s computer. This part can take some time. At some point I tried threading it but encountered failures ; this should definitely be revisited (along with a notification to the user that things are happening as right now it just blocks the UI thread).</li>
+  <li>We look for a pointer to a factory function and invoke that ; it creates a factory object which is passed to the usual score’s plug-in loading mechanism.</li>
+  <li>Done !</li>
+</ul>
+
+<h3 id="long-term-plans">Long-term plans</h3>
+
+<p>Right now, single processes are compiled independently.
+The next step is obviously to compile the execution graph, currently dynamic, itself, directly from <em>score</em>.
+This would ideally enable inter-procedural optimizations between execution nodes and other similar niceties.</p>
+
+<h3 id="frequently-asked-questions">Frequently Asked Questions</h3>
+
+<p>One may ask, very reasonably, the following questions:</p>
+
+<ul>
+  <li>Why not ship LLVM &amp; clang as a separate binary ?</li>
+  <li>Why not just create dynamic libraries and load them with <code class="language-plaintext highlighter-rouge">dlopen</code> ?</li>
+</ul>
+
+<p>To the first question: one of the original plans was also to add potential language extensions and lints
+in order to make some patterns more easy. We’re not there yet but it is much easier if we have access to Clang’s API directly from score. But shipping clang in the SDK would greatly reduce the current binary size so the option is still being assessed. For LLVM, we were already using Faust which uses LLVM itself so the dependency was already there, ready to be used.</p>
+
+<p>To the second: this would mean shipping a linker too. This is relatively easy on Linux and Windows, but much much harder on Mac where until recently with the work on <a href="https://github.com/michaeleisel/zld">zld</a> and on the Zig project, the only workable linker was the one provided with Xcode, and we explicitely do not want our users to have to install Xcode.
+Loading the code with LLJIT also allows us to have more fine-grained control on what symbols are exposed to the plug-ins ; a further step would be to look into generating and using profile data to recompile plug-ins on-the-fly.</p>
+
+<h2 id="developping-add-ons">Developping add-ons</h2>
+
+<p>The simplest way to develop or change an add-on is to do a clone of the score repository and put the add-on folder inside the <code class="language-plaintext highlighter-rouge">src/addons</code> directory.
+The next time CMake is run, it will pick up the add-on and build it along with the rest. It will be treated like any other part of <em>score</em>, which is built almost entirely <a href="https://github.com/ossia/score/tree/master/src/plugins">around plug-ins providing every feature</a>.</p>
+
+<p>An introductory video guiding the development environment installation, and showing how to create a simple effect has been made and should still be up-to-date: <a href="https://www.youtube.com/watch?v=LSifHFbuky0">you can watch it on Youtube</a>. Note that while developing score works on Mac, Windows and Linux, we heavily recommend using Linux as a development environment ; on the very same computer, SSD drive, using the same version of Clang… building <em>score</em> from scratch takes me 4/5 minutes on Linux and 30 minutes on Windows, due to the very very very slow NTFS filesystem most likely (plus whatever malevolent antiviral mess is running on there).</p>
+
+<p>The user manual of <em>score</em> has a very incomplete section on <a href="https://ossia.io/score-docs/development">development of score extensions</a> ; in particular the Doxygen has some information. But a lot more work is needed in that area :-)</p>
+
+<h3 id="add-on-templates">Add-on templates</h3>
+
+<p>We provide a few templates to get started writing custom <em>score</em> add-ons in the <a href="https://github.com/ossia-templates/">ossia-templates</a> GitHub organization:</p>
+
+<ul>
+  <li>
+    <p><a href="https://github.com/ossia-templates/score-audio-node-template">Audio node simple template</a>: a simple, self-contained, one-file extension providing one process. This uses the “Simple API”: a very high-level API that tries its best to enforce type-safety for the input/output ports of a node. As such, it is impossible for instance to mistakenly interpret an “audio” port as a “value” or “MIDI” port, thanks to various C++17 features. Some examples of such nodes are available in the <a href="https://github.com/ossia/score/tree/master/src/plugins/score-plugin-fx/Fx">score git repo</a>. This API is only used to provide execution processes with very simple controls and no particular graphical interface other than the controls. It is what one should use for instance to create audio, MIDI or data effects / filters / generators.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/ossia-templates/score-audio-addon-template">Audio node add-on template</a>: uses the same API than above but gives access to more features: it is possible to use multiple files, control the factories, etc. For instance, the <a href="https://github.com/ossia/score-addon-analysis">Analysis</a> add-on, which provides classes to extract various audio features with the <a href="https://github.com/adamstark/Gist">Gist</a> library, is a good example of what can be achieved with that template.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/ossia-templates/score-vfx-template">VFX template</a>: an example of providing a visual effect. Visual effects in score use the <a href="https://www.qt.io/blog/qt-quick-on-vulkan-metal-direct3d">Qt RHI</a> in order to be portable to OpenGL, D3D, Vulkan and Metal. Note that for now the code is still pretty rough around the edges and not very commented.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/ossia-templates/score-process-template">Process template</a>: an example of providing a process with the “manual” API. This grants much more power to the add-on author: it is possible to design custom inspectors and process user interfaces, expose custom parameters through <em>score</em>’s OSC tree (the LocalTree), provide custom undo-redo actions, etc.
+Most of score’s actual processes use that API. For instance, this is what one would use to integrate a custom programming language.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/ossia-templates/score-device-template">Device template</a>: an example of providing a new device type that can be added to the explorer, like OSC, MIDI, etc… inputs / outputs.</p>
+  </li>
+</ul>
+
+<p>To use the templates, simply clone the repo and run <code class="language-plaintext highlighter-rouge">./init.sh YourAddonName</code>: this will rename everything and make sure that you start from something that builds.
+Every template has a simple example built-in in order to get started quickly.
+They also come with Github actions which will test your code on macOS, Windows and Linux automatically.</p>
+
+<p>Note that the templates would definitely benefit from more polish ; any contribution is welcome !</p>
+
+<h3 id="future-apis">Future APIs</h3>
+
+<p>For the upcoming v3 release of <em>score</em>, the core API may still be in fluctuation. In particular, recording, and in general the way information is passed back from the execution threads to the UI thread is to be reworked ; likewise the graphics pipeline is likely to still change a bit in order to accomodate for more use-cases: it started as a simple “apply an effect on a full-screen quad” thing but is likely going to grow a bit.</p>
+
+<p>In particular, we are waiting for C++ to support reflection and <a href="https://herbsutter.com/2017/07/26/metaclasses-thoughts-on-generative-c/">metaclasses</a> as this would <em>really</em> simplify the Simple API all the while making it more powerful and faster to compile ; right now it relies on a large amount of template instantations to generate all the “Process” code from a few structs at compile-time, which leads to symbol bloat and very long builds.</p>
+
+<p>Ideally, the final, end-game API would look like:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Node</span> <span class="p">{</span>
+    <span class="n">AudioInput</span> <span class="n">input</span><span class="p">;</span>
+    <span class="n">AudioInput</span> <span class="n">sidechain</span><span class="p">;</span>
+    <span class="n">AudioOutput</span> <span class="n">output</span><span class="p">;</span>
+
+    <span class="p">[[</span><span class="n">min</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">max</span><span class="o">:</span> <span class="mi">100</span><span class="p">]]</span>
+    <span class="n">LogSlider</span> <span class="n">frequency</span><span class="p">;</span>
+
+    <span class="p">[[</span><span class="n">values</span><span class="o">:</span> <span class="p">{</span><span class="s">"foo"</span><span class="p">,</span> <span class="s">"bar"</span><span class="p">}]]</span>
+    <span class="n">ComboBox</span> <span class="n">mode</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="n">run</span><span class="p">(</span>
+        <span class="k">const</span> <span class="n">ossia</span><span class="o">::</span><span class="n">token_request</span><span class="o">&amp;</span> <span class="n">tk</span><span class="p">,</span>
+        <span class="n">ossia</span><span class="o">::</span><span class="n">execution_state</span><span class="o">&amp;</span> <span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Do things using the controls &amp; ports defined in the struct</span>
+    <span class="p">}</span>
+<span class="p">};</span></code></pre></figure>
+
+<h2 id="sharing-add-ons">Sharing add-ons</h2>
+
+<p>Once your add-on is ready to be shared to the greater public, it can be submitted to the package manager.
+The package manager simply uses a JSON file which references <a href="https://github.com/ossia/score-addons/blob/master/addons.json">add-ons metadatas</a> ; create a PR to the repository which adds your add-on.</p>
+
+<p>When it is merged, <em>score</em> users will be able to see the node in their library.</p>
+
+<p>Note that this design is likely to evolve and be made more robust, when the need shall arise !</p>
+
+<p>Thanks for reading, and please come to the <a href="https://gitter.im/ossia/score">chat</a> &amp; <a href="https://forum.ossia.io">forum</a> for any question !</p>
+
+  </section>
+  <section class="wrapper container nav">
+       
+        <a href="/posts/phonemacore/" class="post-nav" style="float: left; text-align: left; ">&larr; <strong class="post-nav-title">ossia score in the Phonemacore project</strong></a>
+        
+
+        <div style="position: absolute; left: 50%;">
+            <a href="/blog.html" class="post-nav" style="position: relative; left: -50%;"><strong class="post-nav-title">Back to all posts</strong></a>
+        </div>
+
+        
+        <a href="/posts/summer-internships/" class="post-nav" style="float: right; text-align: right;"><strong class="post-nav-title">Summer internships</strong> &rarr;</a>
+        
+</section>
+
+</article>
+
+
+    </div>
+    <!-- Footer -->
+<footer id="footer">
+
+    <h4 class="follow-us">Follow us !</h4>
+    <ul class="icons">
+	<li><a href="https://twitter.com/ossia_io" class="icon circle"><img src="/css/images/social_media/Twitter_Social_Icon_Circle_Color.png" width="32px" alt="Twitter" /></a></li>
+	<li><a href="https://github.com/OSSIA/score" class="icon circle"><img src="/css/images/social_media/GitHub-Mark-Light-64px.png" width="32px" alt="GitHub" /></a></li>
+	<li><a href="https://vimeo.com/ossia" class="icon circle"><img src="/css/images/social_media/vimeo.png" width="32px" alt="Vimeo"/></a></li>
+	<li><a href="https://www.youtube.com/channel/UCwghQysyNdstRfv8YUPyglw" class="icon circle"><img src="/css/images/social_media/youtube_social_circle_red.png" width="32px" alt="YouTube"/></a></li>
+	<li><a href="https://www.facebook.com/ossia.io" class="icon circle"><img src="/css/images/social_media/f_logo_RGB-Blue_58.png" width="34px" alt="Facebook"/></a></li>
+    </ul>
+    <ul class="copyright">
+        <li>&copy; ossia 2021</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+    </ul>
+</footer>
+
+<script>
+$(function(){
+    $('.cat a').each(function(){
+    var category_name = "site-" + this.text;
+    if("Dev" ===  category_name){
+        $(this).addClass('active');
+        return false;
+    }
+    });
+});
+
+// load asynchronously videos to avoid slowing the page showing
+function init() {
+var vidDefer = document.getElementsByTagName('iframe');
+for (var i=0; i<vidDefer.length; i++) {
+if(vidDefer[i].getAttribute('data-src')) {
+vidDefer[i].setAttribute('src',vidDefer[i].getAttribute('data-src'));
+} } }
+window.onload = init;
+</script>
+
+
+  </body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!--
+	Twenty by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+  <title>
+    Learn
+  </title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="Open Software System for Interactive Applications - home of ossia score, a free, open-source, cross-platform intermedia sequencer for precise and flexible scripting of interactive scenarios.
+" />
+  <meta
+    name="keywords"
+    content="ossia, score, libossia, sequencer, interactive art, intermedia, new media art, osc, open sound control, midi, oscquery"
+  />
+
+  
+  <link rel="shortcut icon" type="image/png" href="/assets/score-logo.png" />
+  <noscript>
+    <link rel="stylesheet" href="/css/skel.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </noscript>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/skel.min.js"></script>
+  <script src="/js/skel-layers.min.js"></script>
+  <script src="/js/init.js"></script>
+
+  <meta name="viewport" content="width=device-width" />
+
+  <link
+    rel="canonical"
+    href="https://ossia.io/score/learn.html"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Catamaran:regular,bold,semi-bold,medium|Libre+Franklin:regular,bold,semi-bold,light,medium|Lato:regular,bold,semi-bold,light,medium"
+  />
+</head>
+<!-- <div id="cover"></div> -->
+
+
+  <body>
+
+    <header id="header">
+	<nav id="nav" style="vertical-align: middle; ">
+        <div id="ossia-logo-header" style="margin-left: 1em;" >
+            <a id="homebtn" class="home-logo" style="margin: 0;" href="/">
+                <image src="/assets/score-logo.png" height="45px" alt="score logo"/>
+                <h2 class="software small" style="padding: 0; padding-left: 0.2em;padding-bottom: 0.1em;">ossia</h2>
+            </a>
+        </div>
+        <div class="cat" style="flex-grow:1;">
+            <a href="/score/about.html">score</a>
+			<a href="/site-libossia/about.html">libossia</a>
+            <a href="/gallery.html">community</a>
+			<a href="/about.html">about</a>
+        </div>
+        <div>
+            <a href="https://forum.ossia.io/" target="_blank" style="padding-left: 0; padding-right: 1em;">forum</a>
+            <a href="https://gitter.im/OSSIA/score" target="_blank" style="padding:0; padding-right: 1em;">chat</a>
+             <a class="donate" href="https://opencollective.com/ossia" target="_blank" style="padding:0; padding-right: 1em;color: var(--orange);">donate</a>
+        </div>
+	</nav>
+</header>
+
+    <div class="page-content">
+        <article id="main">
+  <header class="container" style="padding-top: 6em;text-align:center;">
+  
+    <div class="menu">
+            <a href="/score/about.html" class="menu-item" ><span class="icon-svg icon-about"/></span>About</a>
+            <a href="/score/download.html" class="menu-item" ><span class="icon-svg icon-download"/></span>Download</a>
+            <a href="/score/features.html" class="menu-item"><span class="icon-svg icon-feature"></span>Features</a>
+            <a href="/score/learn.html" class="menu-item"><span class="icon-svg icon-documentation"></span>Learn</a>
+            <a href="/contributor-guide.html" class="menu-item"><span class="icon-svg icon-contributing"></span>Contribute</a>
+    </div>
+        
+<!--     <h2 class="page-title">Learn</h2> -->
+  </header>
+
+    <section class="wrapper style4 container">
+        <div class="menu" style="display:flex; align-items:center; width: 100%;margin:auto; padding: auto; ">
+        <!-- <a href="/score/learn/faq.html"  class="menu-item panel" ><span class="icon-svg icon-chat"></span> FAQ
+         <p class="description">Most frequently asked questions</p></a>
+         -->
+         <a href="https://www.youtube.com/playlist?list=PLIHLSiZpIa6aRQT5v6RInuyCR3qWmMEgV" class="menu-item panel" target="_blank"><span class="icon-svg icon-video"></span>Tutorials
+         <p class="description">Video tutorials in french</p></a>
+
+         <a href="https://ossia.io/score-docs/" target="_blank" class="menu-item panel"><span class="icon-svg icon-documentation"></span>Docs
+         <p class="description">Documentation for score</p></a>
+
+         <a href="https://forum.ossia.io/" target="_blank" class="menu-item panel"><span class="icon-svg icon-forum"></span>Forum
+         <p class="description">Ask any questions !</p></a>
+         <a href="https://gitter.im/OSSIA/score" target="_blank" class="menu-item panel"><span class="icon-svg icon-chat"></span>Chat<p class="description">Come chat with us !</p></a>
+</div>
+
+<div style="width: 100%;">
+<h2 class="page-title" style="text-align: center;">FAQ</h2>
+
+<h3 class="faq">Basics</h3>
+<p type="button" class="collapsible"> What is ossia score ?</p>
+<div class="collapsible-content">
+ossia score is an interactive, intermedia sequencer. It allows to sequence various kinds of media and parameters (for instance, OSC messages, sound files, video effects)... over time in a timeline. The timeline has interactive features : it is possible to specify that a part of the score will execute when an event happens, such as a note being played, etc.
+</div>
+
+<p type="button" class="collapsible"> Is it free ?</p>
+<div class="collapsible-content">
+Yes! The whole system is available under GNU GPLv3 (for ossia score) and GNU LGPLv3 (for libossia).
+You can copy, redistribute, use, share, modify it as much as you wish.<br />
+We strongly believe that artists from around the world need free tools.
+</div>
+
+<p type="button" class="collapsible"> Can I use it in a commercial or production setting ?</p>
+<div class="collapsible-content">
+Yes! The license allows you to do whatever you want with the software. You can make artworks,
+shows, music production, art and museum installs, etc... without any limitation of features, time, or
+anything of the sort.<br />
+Note that there is *no warranty* provided - it is however possible to contact our team at
+<a href="mailto:contact@ossia.io">contact@ossia.io</a> for paid support.
+</div>
+
+<p type="button" class="collapsible"> How can I help ?</p>
+<div class="collapsible-content">
+The easiest way to contribute is by donating to the <a href="https://opencollective.org/ossia">development fund</a>.
+
+A very good way to participate is by contributing through bug reports, and code improvements.
+See the <a href="/contributor-guide.html">Contributing</a> page for more information.
+</div>
+<!--
+<p type="button" class="collapsible"> Playing a sound</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Creating an interactive trigger</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Creating a temporal condition</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Showing a video</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Automating a parameter</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Creating loops</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Creating interactive loops</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Writing & playing MIDI through a software synthesizer</p>
+<div class="collapsible-content">
+</div>
+
+<h3 class="faq">Intermediate usage</h3>
+<p type="button" class="collapsible"> Understanding the ossia score timeline</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Mapping a parameter</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible"> Creating effects and synthesizer chains</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Modulating with LFOs, step sequencers and others</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Saving and loading presets</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Switching between musical and real-time mode</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Recording OSC messages and automations</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Nesting scores</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible"> Creating sequences of parameters</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible"> Understanding racks, layers and slots</p>
+<div class="collapsible-content">
+</div>
+
+<h3 class="faq">Advanced usage</h3>
+<p type="button" class="collapsible"> Creating complex graphs of effects</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible"> Tempo control and polyrythmy</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Multi-channel audio output and sound spatialization</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Audio routing</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Creating state-machine-like scores</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible"> Creating a control surface for external parameters</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible"> Remote controlling through a web page</p>
+<div class="collapsible-content">
+</div>
+
+<h3 class="faq">Using the embedded scripting languages</h3>
+<p type="button" class="collapsible"> Scripting with JavaScript</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible"> Writing audio effects with Faust</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Writing mappings with math expressions</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Writing graphic effects with ISF</p>
+<div class="collapsible-content">
+</div>
+
+<h3 class="faq">Working with other software</h3>
+
+<p type="button" class="collapsible">  Connecting to Processing</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible">  Connecting to OpenRNDR</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible"> Connecting to Max/MSP</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible"> Connecting to PureData</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible">  Connecting to Unreal Engine</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible">  Connecting to Unity3D</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Connecting to openFrameworks</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible">  Connecting to Qt / QML</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible">  Connecting to a generic OSC software</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Connecting to a generic OSCQuery software</p>
+<div class="collapsible-content">
+</div>
+
+<h3 class="faq">Working with hardware</h3>
+
+<p type="button" class="collapsible"> Getting data from a MIDI device</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible">  Sending data to an external MIDI device</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button"  class="collapsible">  Sending data to ArtNet nodes</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Communicating with a serial device (Arduino, etc)</p>
+<div class="collapsible-content">
+</div>
+
+<p type="button" class="collapsible"> Communicating with a gamepad or Wiimote</p>
+<div class="collapsible-content">
+</div>
+-->
+<h3 class="faq">Troubleshooting</h3>
+
+<p type="button" class="collapsible">  score just crashed</p>
+<div class="collapsible-content">
+    Please send us a detailed bug report of what you were doing at the moment of the crash,
+    along with any crashlog, in either the forum, the chat or the <a href="https://github.com/ossia/score/issues">Github issues (preferably)</a>.
+    Thanks !
+</div>
+
+<p type="button" class="collapsible">  The playback does not start</p>
+<div class="collapsible-content">
+     Most of the time, this is due to incorrect sound settings.
+</div>
+
+<p type="button" class="collapsible">  The score runs but there is no sound</p>
+<div class="collapsible-content">
+     Most of the time, this is due to incorrect sound settings.
+</div>
+
+<p type="button" class="collapsible">  Playback seems to hang at random times on Linux</p>
+<div class="collapsible-content">
+    This is due to a <a href="https://portaudio.music.columbia.narkive.com/3V9hsUak/pa-linux-alsa-c-3636-assertion-failed-with-hack-fix">PortAudio bug</a>.
+    Use the JACK backend instead.
+</div>
+
+<p type="button" class="collapsible"> Some VST plug-ins and virtual cameras do not work on Mac</p>
+<div class="collapsible-content">
+    You are likely encountering <a href="https://stackoverflow.com/questions/61114738/are-macos-virtual-webcams-inherently-incompatible-with-10-14s-hardened-runtime">security-related macOS issues</a>. <br />
+    As a workaround, you can follow the steps given in the above link to remove the code signing of the score binary, which will in turn make macOS allow score to open virtual webcams and any audio plug-ins.
+</div>
+
+<p type="button" class="collapsible"> The minimap is hard to use on Mac</p>
+<div class="collapsible-content">
+    You are likely encountering <a href="https://stackoverflow.com/questions/61843481/macos-simulated-mouse-event-only-works-when-launching-binary-not-application-b">this macOS issue</a>. <br />
+    As a workaround, you can try to open score by right-clicking on Score.app, selection "Open contents", navigating to "Score.app/Contents/MacOS" and running the "score" binary from there.
+</div>
+
+</div>
+
+<p><br /></p>
+
+<p><br /></p>
+
+<p align="center">
+<a href="https://forum.ossia.io/" class="page-button" target="_blank">If your question is not here, ask us in the forum ! </a>
+</p>
+
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+    for (i = 0; i < coll.length; i++) {
+        coll[i].classList.remove("active");
+        coll[i].nextElementSibling.style.display = "none";
+    }
+
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    content.style.display = "block";
+  });
+}
+</script>
+
+
+    </section>
+</article>
+
+<script>
+$(function(){
+    $('.menu a').each(function(){
+    if("Learn" ===  this.text){
+        $(this).addClass('active');
+         return false;
+    }
+    });
+});
+</script>
+
+    </div>
+    <!-- Footer -->
+<footer id="footer">
+
+    <h4 class="follow-us">Follow us !</h4>
+    <ul class="icons">
+	<li><a href="https://twitter.com/ossia_io" class="icon circle"><img src="/css/images/social_media/Twitter_Social_Icon_Circle_Color.png" width="32px" alt="Twitter" /></a></li>
+	<li><a href="https://github.com/OSSIA/score" class="icon circle"><img src="/css/images/social_media/GitHub-Mark-Light-64px.png" width="32px" alt="GitHub" /></a></li>
+	<li><a href="https://vimeo.com/ossia" class="icon circle"><img src="/css/images/social_media/vimeo.png" width="32px" alt="Vimeo"/></a></li>
+	<li><a href="https://www.youtube.com/channel/UCwghQysyNdstRfv8YUPyglw" class="icon circle"><img src="/css/images/social_media/youtube_social_circle_red.png" width="32px" alt="YouTube"/></a></li>
+	<li><a href="https://www.facebook.com/ossia.io" class="icon circle"><img src="/css/images/social_media/f_logo_RGB-Blue_58.png" width="34px" alt="Facebook"/></a></li>
+    </ul>
+    <ul class="copyright">
+        <li>&copy; ossia 2021</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+    </ul>
+</footer>
+
+<script>
+$(function(){
+    $('.cat a').each(function(){
+    var category_name = "site-" + this.text;
+    if("site-learn" ===  category_name){
+        $(this).addClass('active');
+        return false;
+    }
+    });
+});
+
+// load asynchronously videos to avoid slowing the page showing
+function init() {
+var vidDefer = document.getElementsByTagName('iframe');
+for (var i=0; i<vidDefer.length; i++) {
+if(vidDefer[i].getAttribute('data-src')) {
+vidDefer[i].setAttribute('src',vidDefer[i].getAttribute('data-src'));
+} } }
+window.onload = init;
+</script>
+
+
+  </body>
+</html>

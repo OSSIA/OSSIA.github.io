@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!--
+	Twenty by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+  <title>
+    Download
+  </title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="Open Software System for Interactive Applications - home of ossia score, a free, open-source, cross-platform intermedia sequencer for precise and flexible scripting of interactive scenarios.
+" />
+  <meta
+    name="keywords"
+    content="ossia, score, libossia, sequencer, interactive art, intermedia, new media art, osc, open sound control, midi, oscquery"
+  />
+
+  
+  <link rel="shortcut icon" type="image/png" href="/assets/score-logo.png" />
+  <noscript>
+    <link rel="stylesheet" href="/css/skel.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </noscript>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/skel.min.js"></script>
+  <script src="/js/skel-layers.min.js"></script>
+  <script src="/js/init.js"></script>
+
+  <meta name="viewport" content="width=device-width" />
+
+  <link
+    rel="canonical"
+    href="https://ossia.io/score/download.html"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Catamaran:regular,bold,semi-bold,medium|Libre+Franklin:regular,bold,semi-bold,light,medium|Lato:regular,bold,semi-bold,light,medium"
+  />
+</head>
+<!-- <div id="cover"></div> -->
+
+
+  <body>
+
+    <header id="header">
+	<nav id="nav" style="vertical-align: middle; ">
+        <div id="ossia-logo-header" style="margin-left: 1em;" >
+            <a id="homebtn" class="home-logo" style="margin: 0;" href="/">
+                <image src="/assets/score-logo.png" height="45px" alt="score logo"/>
+                <h2 class="software small" style="padding: 0; padding-left: 0.2em;padding-bottom: 0.1em;">ossia</h2>
+            </a>
+        </div>
+        <div class="cat" style="flex-grow:1;">
+            <a href="/score/about.html">score</a>
+			<a href="/site-libossia/about.html">libossia</a>
+            <a href="/gallery.html">community</a>
+			<a href="/about.html">about</a>
+        </div>
+        <div>
+            <a href="https://forum.ossia.io/" target="_blank" style="padding-left: 0; padding-right: 1em;">forum</a>
+            <a href="https://gitter.im/OSSIA/score" target="_blank" style="padding:0; padding-right: 1em;">chat</a>
+             <a class="donate" href="https://opencollective.com/ossia" target="_blank" style="padding:0; padding-right: 1em;color: var(--orange);">donate</a>
+        </div>
+	</nav>
+</header>
+
+    <div class="page-content">
+        <article id="main">
+  <header class="container" style="padding-top: 6em;text-align:center;">
+  
+    <div class="menu">
+            <a href="/score/about.html" class="menu-item" ><span class="icon-svg icon-about"/></span>About</a>
+            <a href="/score/download.html" class="menu-item" ><span class="icon-svg icon-download"/></span>Download</a>
+            <a href="/score/features.html" class="menu-item"><span class="icon-svg icon-feature"></span>Features</a>
+            <a href="/score/learn.html" class="menu-item"><span class="icon-svg icon-documentation"></span>Learn</a>
+            <a href="/contributor-guide.html" class="menu-item"><span class="icon-svg icon-contributing"></span>Contribute</a>
+    </div>
+        
+<!--     <h2 class="page-title">Download</h2> -->
+  </header>
+
+    <section class="wrapper style4 container">
+        <p>Download the latest alpha release <strong>ossia score v3.0.0-a34</strong>:</p>
+<p style="display: flex; justify-content: center;align-content:space-evenly;" align="center">
+<a href="https://github.com/ossia/score/releases/download/v3.0.0-a34/ossia.score-3.0.0-a34-win64.exe" target="_blank" class="page-button download-page"><img src="../assets/windows_logo_2012-Black.svg" height="80px" />Windows 10</a>
+<a href="https://github.com/ossia/score/releases/download/v3.0.0-a34/ossia.score-3.0.0-a34-macOS.dmg" target="_blank" class="page-button download-page"><img src="../assets/apple_logo_black.svg" height="80px" />Mac OS<br />10.13 and later</a>
+<a href="https://github.com/ossia/score/releases/download/v3.0.0-a34/ossia.score-3.0.0-a34-linux-amd64.AppImage" target="_blank" class="page-button download-page"><img src="../assets/Linux_Platform.svg" height="80px" />Linux</a>
+</p>
+<p>See the <a href="https://github.com/OSSIA/score/releases/latest" target="_blank">change log</a> for the latest release.</p>
+
+<h2 id="supported-platforms">Supported platforms</h2>
+
+<p>The releases are 64-bit on all operating systems.</p>
+
+<ul>
+  <li>Windows: must be at least Windows 10.</li>
+  <li>macOS: must be at least High Sierra (10.13).</li>
+  <li>All Linux distributions from at least 2015-era should be supported.
+    <ul>
+      <li>The packages are built on CentOS 7.</li>
+      <li>Your system must have at least glibc-2.17, as well as X11, ALSA, libGL, librt, libdbus.</li>
+      <li>JACK and Avahi are recommended.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="optional-dependencies">Optional dependencies</h2>
+
+<p><em>score</em> and <em>libossia</em> use Bonjour for the OSCQuery automatic discovery feature.</p>
+
+<p>This means that on Windows, you must install the <a href="https://support.apple.com/kb/dl999?locale=en_US">Bonjour Print Services</a>
+for this to work.</p>
+
+<p>On Linux, you must be running Avahi (if you are using a common distribution, such as Ubuntu or Fedora it is likely already the case).</p>
+
+<p>Additionally, on Linux, libbluez may be necessary to use Wiimotes (which go through Bluetooth).</p>
+
+<h2 id="source-code">Source code</h2>
+
+<p>The source code for the latest release can be downloaded from here:</p>
+<ul>
+  <li>Latest release’s <a href="https://github.com/ossia/score/releases/download/v3.0.0-a34/ossia.score-3.0.0-a34-src.tar.xz">source code</a></li>
+  <li>Latest release’s <a href="https://github.com/ossia/score/releases/download/v3.0.0-a34/ossia.score-3.0.0-a34-src.tar.xz.asc">source code signature</a></li>
+  <li>Alternatively, you can fetch the latest source code <a href="https://github.com/OSSIA/score">directly from Github</a></li>
+</ul>
+
+<h2 id="stable-version">Stable version</h2>
+
+<p>The latest stable version is <a href="https://github.com/ossia/score/releases/tag/v2.5.2" target="_blank">2.5.2</a> - it won’t be updated anymore however.
+Due to substantial changes to the software the save files are not importable yet in the 3.0 branch.</p>
+
+    </section>
+</article>
+
+<script>
+$(function(){
+    $('.menu a').each(function(){
+    if("Download" ===  this.text){
+        $(this).addClass('active');
+         return false;
+    }
+    });
+});
+</script>
+
+    </div>
+    <!-- Footer -->
+<footer id="footer">
+
+    <h4 class="follow-us">Follow us !</h4>
+    <ul class="icons">
+	<li><a href="https://twitter.com/ossia_io" class="icon circle"><img src="/css/images/social_media/Twitter_Social_Icon_Circle_Color.png" width="32px" alt="Twitter" /></a></li>
+	<li><a href="https://github.com/OSSIA/score" class="icon circle"><img src="/css/images/social_media/GitHub-Mark-Light-64px.png" width="32px" alt="GitHub" /></a></li>
+	<li><a href="https://vimeo.com/ossia" class="icon circle"><img src="/css/images/social_media/vimeo.png" width="32px" alt="Vimeo"/></a></li>
+	<li><a href="https://www.youtube.com/channel/UCwghQysyNdstRfv8YUPyglw" class="icon circle"><img src="/css/images/social_media/youtube_social_circle_red.png" width="32px" alt="YouTube"/></a></li>
+	<li><a href="https://www.facebook.com/ossia.io" class="icon circle"><img src="/css/images/social_media/f_logo_RGB-Blue_58.png" width="34px" alt="Facebook"/></a></li>
+    </ul>
+    <ul class="copyright">
+        <li>&copy; ossia 2021</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+    </ul>
+</footer>
+
+<script>
+$(function(){
+    $('.cat a').each(function(){
+    var category_name = "site-" + this.text;
+    if("site-score" ===  category_name){
+        $(this).addClass('active');
+        return false;
+    }
+    });
+});
+
+// load asynchronously videos to avoid slowing the page showing
+function init() {
+var vidDefer = document.getElementsByTagName('iframe');
+for (var i=0; i<vidDefer.length; i++) {
+if(vidDefer[i].getAttribute('data-src')) {
+vidDefer[i].setAttribute('src',vidDefer[i].getAttribute('data-src'));
+} } }
+window.onload = init;
+</script>
+
+
+  </body>
+</html>

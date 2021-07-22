@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!--
+	Twenty by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+  <title>
+    Download
+  </title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="Open Software System for Interactive Applications - home of ossia score, a free, open-source, cross-platform intermedia sequencer for precise and flexible scripting of interactive scenarios.
+" />
+  <meta
+    name="keywords"
+    content="ossia, score, libossia, sequencer, interactive art, intermedia, new media art, osc, open sound control, midi, oscquery"
+  />
+
+  
+  <link rel="shortcut icon" type="image/png" href="/assets/score-logo.png" />
+  <noscript>
+    <link rel="stylesheet" href="/css/skel.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </noscript>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/skel.min.js"></script>
+  <script src="/js/skel-layers.min.js"></script>
+  <script src="/js/init.js"></script>
+
+  <meta name="viewport" content="width=device-width" />
+
+  <link
+    rel="canonical"
+    href="https://ossia.io/site-libossia/download.html"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Catamaran:regular,bold,semi-bold,medium|Libre+Franklin:regular,bold,semi-bold,light,medium|Lato:regular,bold,semi-bold,light,medium"
+  />
+</head>
+<!-- <div id="cover"></div> -->
+
+
+  <body>
+
+    <header id="header">
+	<nav id="nav" style="vertical-align: middle; ">
+        <div id="ossia-logo-header" style="margin-left: 1em;" >
+            <a id="homebtn" class="home-logo" style="margin: 0;" href="/">
+                <image src="/assets/score-logo.png" height="45px" alt="score logo"/>
+                <h2 class="software small" style="padding: 0; padding-left: 0.2em;padding-bottom: 0.1em;">ossia</h2>
+            </a>
+        </div>
+        <div class="cat" style="flex-grow:1;">
+            <a href="/score/about.html">score</a>
+			<a href="/site-libossia/about.html">libossia</a>
+            <a href="/gallery.html">community</a>
+			<a href="/about.html">about</a>
+        </div>
+        <div>
+            <a href="https://forum.ossia.io/" target="_blank" style="padding-left: 0; padding-right: 1em;">forum</a>
+            <a href="https://gitter.im/OSSIA/score" target="_blank" style="padding:0; padding-right: 1em;">chat</a>
+             <a class="donate" href="https://opencollective.com/ossia" target="_blank" style="padding:0; padding-right: 1em;color: var(--orange);">donate</a>
+        </div>
+	</nav>
+</header>
+
+    <div class="page-content">
+        <article id="main">
+  <header class="container" style="padding-top: 6em;text-align:center;">
+  
+    <div class="menu">
+            <a href="/site-libossia/about.html" class="menu-item" ><span class="icon-svg icon-about"/></span>About</a>
+            <a href="/site-libossia/download.html" class="menu-item" ><span class="icon-svg icon-download"/></span>Download</a>
+            <a href="/site-libossia/features.html" class="menu-item"><span class="icon-svg icon-feature"></span>Features</a>
+            <a href="https://ossia.io/ossia-docs/#introduction" target="_blank" class="menu-item"><span class="icon-svg icon-documentation"></span>Learn</a>
+            <a href="https://gitter.im/OSSIA/libossia" class="menu-item"><span class="icon-svg icon-chat"></span>Chat</a>
+    </div>
+        
+    <h2 class="page-title">Download</h2>
+  </header>
+
+    <section class="wrapper style4 container">
+        <p><b>libossia</b> is available for many platforms and environments:</p>
+
+<div class="logo-grid" style="margin-top: 1em; margin-bottom: 1em;">
+    <a href="#cpp-binding"><img src="/assets/logo/cpp.png" height="60" width="auto" /></a>
+    <a href="#c-binding"><img src="/assets/logo/c.png" height="60" width="auto" /></a>
+    <a href="#max-binding"><img src="/assets/logo/max.jpg" height="70" width="auto" /></a>
+    <a href="#pd-binding"><img src="/assets/logo/pd.png" height="60" width="auto" /></a>
+    <a href="#unity-binding"><img src="/assets/logo/unity.png" height="60" width="auto" /></a>
+    <a href="#processing-binding"><img src="/assets/logo/processing.jpg" height="60" width="auto" /></a>
+    <a href="#of-binding"><img src="/assets/logo/of.png" height="40" width="auto" /></a>
+    <a href="#supercollider-binding"><img src="/assets/logo/supercollider-logo.png" height="60" width="auto" /></a>
+    <a href="#qt-binding"><img src="/assets/logo/qt-logo.png" height="60" width="auto" /></a>
+    <a href="#python-binding"><img src="/assets/logo/python-logo.png" height="60" width="auto" /></a>
+    <a href="#faust-binding"><img src="/assets/logo/faust.png" height="50" width="auto" /></a>
+</div>
+
+<p>The license for the library itself is LGPLv3.</p>
+
+<ul>
+<li>The source code is hosted on <a href="https://github.com/ossia/libossia">github.com/ossia/libossia</a>.</li>
+<li>The latest releases are stored here <a href="https://github.com/OSSIA/libossia/releases">github.com/OSSIA/libossia/releases</a>.</li>
+</ul>
+
+<div>
+  <h2 class="binding-title" id="cpp-binding"><img src="/assets/logo/cpp.png" height="60" width="auto" />Native C++ library</h2>
+  <div class="features-list">
+    This is the main C++ library on which everything is built upon. It is useful if you plan to integrate libossia to a C++ software or write a new
+    OSCQuery-enabled software for instance.
+    Releases are built for Windows (with Visual Studio 2019 16.6), macOS (targeting 10.14+ with Intel CPUs), and Ubuntu Linux (with gcc-9).
+    The library is also known to build under iOS, Android, WASM, as well as ARM Linux.
+    </div><br />
+    <div class="features-list">
+    <ul>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/libossia-native-win.zip">Download (Windows)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/libossia-native-linux_x86_64-static.tar.gz">Download (Linux, static library, x86_64)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/libossia-native-linux_x86_64.tar.gz">Download (Linux, x86_64)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/libossia-native-macos-static.tar.gz">Download (macOS, static library, x86_64)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/libossia-native-macos.tar.gz">Download (macOS, x86_64)</a></li><br />
+    <li><a href="https://github.com/ossia/libossia">Source code</a></li>
+    <li><a href="https://github.com/ossia/libossia/wiki/Building">Build instructions</a></li>
+    <li><a href="https://ossia.io/ossia-docs/?cpp--14#introduction">API Documentation</a></li>
+    <li><a href="https://github.com/ossia/libossia/tree/master/examples">Examples</a></li>
+    <li><a href="https://ossia.io/libossia/html/">Doxygen</a></li>
+    </ul>
+  </div>
+
+  <h2 class="binding-title" id="c-binding"><img src="/assets/logo/c.png" height="60" width="auto" />C binding</h2>
+  <div class="features-list">
+    libossia provides a clean C89 header which wraps the most important functionality.
+    It can be used with the libossia-native libraries above which contain the functionality linked in.
+  </div><br />
+  <div>
+    <ul>
+    <!--<li><a href="">Downloads</a></li>-->
+    <li><a href="https://github.com/ossia/libossia/tree/master/src/ossia-c">Source code</a></li>
+    <li><a href="https://ossia.io/ossia-docs/?c#introduction">API Documentation</a></li>
+    <li><a href="https://ossia.io/libossia/html/group___c_a_p_i.html">Doxygen</a></li>
+    <!--<li><a href="">Examples</a></li>-->
+    <!--<li><a href="https://ossia.io/libossia/html">Doxygen</a></li>-->
+    </ul>
+  </div>
+
+<!--
+  <h2 class="binding-title">Unreal Engine integration</h2>
+  <div class="features-list">
+    libossia provides a C header which wraps the most important functionality.
+  </div><br/>
+  <div>
+    <ul>
+    <li><a href="">Downloads</a></li>
+    <li><a href="">API Documentation</a></li>
+    <li><a href="">Examples</a></li>
+    <li><a href="">Doxygen</a></li>
+    </ul>
+  </div>
+-->
+  <h2 class="binding-title" id="max-binding"><img src="/assets/logo/max.jpg" height="70" width="auto" />Max/MSP</h2>
+  <div class="features-list">
+    libossia is available as a Max package.
+    </div><br />
+    <div>
+    <ul>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-max-osx.zip">Max package (macOS)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-max-win.zip">Max package (Windows)</a></li><br />
+    <li><a href="https://github.com/ossia/libossia/tree/master/src/ossia-max">Source code</a></li>
+    <li><a href="https://ossia.io/ossia-docs/?plaintext--max#introduction">API Documentation</a></li>
+    <!--<li><a href="">Examples</a></li>-->
+    </ul>
+  </div>
+
+  <h2 class="binding-title" id="pd-binding"><img src="/assets/logo/pd.png" height="60" width="auto" />PureData</h2>
+  <div class="features-list">
+    libossia is available as a PureData package. It is also supported for PurrData.
+    In PureData, you can install ossia directly through the package manager.
+    </div><br />
+    <div>
+    <ul>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-pd-linux_arm.tar.gz">PureData externals (Linux, ARMv7)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-pd-linux_x86_64.tar.gz">PureData externals (Linux, x86_64)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-pd-osx.tar.gz">PureData externals (macOS)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-pd-win32.zip">PureData externals (Windows, 32-bit)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-pd-win64.zip">PureData externals (Windows, 64-bit)</a></li><br />
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-purr-data-linux_arm.tar.gz">PurrData externals (Linux, ARMv7)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-purr-data-linux_x86_64.tar.gz">PurrData externals (Linux, x86_64)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-purr-data-osx.tar.gz">PurrData externals (macOS)</a></li><br />
+    <li><a href="https://github.com/ossia/libossia/tree/master/src/ossia-pd">Source code</a></li>
+    <li><a href="https://ossia.io/ossia-docs/?plaintext--pd#introduction">API Documentation</a></li>
+    <!--<li><a href="">Examples</a></li>-->
+    </ul>
+  </div>
+
+  <h2 class="binding-title" id="unity-binding"><img src="/assets/logo/unity.png" height="60" width="auto" />C#, Unity3D</h2>
+  <div class="features-list">
+    libossia provides a C# binding. An additional Unity3D GameObject integration layer is available.
+    The library ships as an asset that can be copied into your project.
+    The C# files at the root level (Assets/ossia) do not depend on Unity3D and can be used from any C# code base.
+    </div><br />
+    <div>
+    <ul>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-unity3d.zip">Download Unity3D asset (Mac / Win / Linux)</a></li><br />
+    <li><a href="https://github.com/ossia/libossia/tree/master/src/ossia-unity3d">Source code</a></li>
+    <li><a href="https://ossia.io/ossia-docs/?csharp#introduction">API Documentation</a></li>
+    <!--<li><a href="">Examples</a></li>-->
+    </ul>
+  </div>
+
+  <h2 class="binding-title" id="processing-binding"><img src="/assets/logo/processing.jpg" height="60" width="auto" />Java, Kotlin, Processing, OpenRNDR</h2>
+  <div class="features-list">
+    libossia provides JVM bindings, which allows it to be used with Processing, etc.
+    </div><br />
+    <div>
+    <ul>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-java.zip">Download Java library (Mac / Win / Linux)</a></li><br />
+    <li><a href="https://github.com/ossia/libossia/tree/master/src/ossia-java">Source code</a></li>
+    <li><a href="https://ossia.io/ossia-docs/?java#introduction">API Documentation</a></li>
+    </ul>
+  </div>
+
+  <h2 class="binding-title" id="of-binding"><img src="/assets/logo/of.png" height="40" width="auto" />openFrameworks</h2>
+  <div class="features-list">
+    libossia is available as an openFrameworks extension made to expose a tree of ofParameters to OSCQuery easily.
+    </div><br />
+    <div>
+    <ul>
+    <li><a href="https://github.com/bltzr/ofxOscQuery/releases">Downloads (Win, Mac, Linux)</a></li><br />
+    <li><a href="https://github.com/bltzr/ofxOscQuery">Source code, examples...</a></li>
+    <li><a href="">API Documentation</a></li>
+    <!--<li><a href="">Examples</a></li>-->
+    </ul>
+  </div>
+
+  <h2 class="binding-title" id="supercollider-binding"><img src="/assets/logo/supercollider-logo.png" height="60" width="auto" />SuperCollider</h2>
+  <div class="features-list">
+    libossia is available for SuperCollider.
+    </div><br />
+    <div>
+    <ul>
+    <li><a href="https://github.com/OSSIA/ossia-sclang">Source code</a></li>
+    <li><a href="https://ossia.io/ossia-docs/?javascript#creating-parameters">API Documentation</a></li>
+    <!--<li><a href="">Examples</a></li>-->
+    </ul>
+  </div>
+
+  <h2 class="binding-title" id="qt-binding"><img src="/assets/logo/qt-logo.png" height="60" width="auto" />Qt / QML</h2>
+  <div class="features-list">
+    libossia integrates with the QML markup language, to easily build performant user interfaces.
+    </div><br />
+    <div>
+    <ul>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-qml-linux_x86_64.tar.gz">Download (Linux, x86_64)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-qml-osx.tar.gz">Download (macOS)</a></li>
+    <li><a href="https://github.com/ossia/libossia/releases/download/v1.2.0/ossia-qml-win64.zip">Download (Windows, 64-bit)</a></li><br />
+    <li><a href="https://github.com/ossia/libossia/tree/master/src/ossia-qt">Source code</a></li>
+    <li><a href="https://ossia.io/ossia-docs/?qml#introduction">API Documentation</a></li>
+    <!--<li><a href="">Examples</a></li>-->
+    </ul>
+  </div>
+
+  <h2 class="binding-title" id="python-binding"><img src="/assets/logo/python-logo.png" height="60" width="auto" />Python</h2>
+  <div class="features-list">
+    libossia is useable from Python.
+  </div><br />
+  <div>
+    <ul>
+    <li><a href="https://github.com/ossia/libossia/tree/master/src/ossia-python">Source code</a></li>
+    <li><a href="https://ossia.io/ossia-docs/?python#introduction">API Documentation</a></li>
+    <!--<li><a href="">Examples</a></li>-->
+    </ul>
+  </div>
+
+  <h2 class="binding-title" id="faust-binding"><img src="/assets/logo/faust.png" height="50" width="auto" />Faust architecture</h2>
+  <div class="features-list">
+    libossia provides a Faust architecture file. It will expose the controls over OSCQuery.
+    </div><br />
+    <div>
+    <ul>
+    <li><a href="https://github.com/ossia/libossia/tree/master/src/ossia-faust">Download</a></li>
+    <!--<li><a href="">API Documentation</a></li>-->
+    <!--<li><a href="">Examples</a></li>-->
+    </ul>
+  </div>
+</div>
+
+
+    </section>
+</article>
+    
+<script>
+$(function(){
+    $('.menu a').each(function(){
+    if("Download" ===  this.text){
+        $(this).addClass('active');
+         return false;
+    }
+    });
+});
+</script>
+
+    </div>
+    <!-- Footer -->
+<footer id="footer">
+
+    <h4 class="follow-us">Follow us !</h4>
+    <ul class="icons">
+	<li><a href="https://twitter.com/ossia_io" class="icon circle"><img src="/css/images/social_media/Twitter_Social_Icon_Circle_Color.png" width="32px" alt="Twitter" /></a></li>
+	<li><a href="https://github.com/OSSIA/score" class="icon circle"><img src="/css/images/social_media/GitHub-Mark-Light-64px.png" width="32px" alt="GitHub" /></a></li>
+	<li><a href="https://vimeo.com/ossia" class="icon circle"><img src="/css/images/social_media/vimeo.png" width="32px" alt="Vimeo"/></a></li>
+	<li><a href="https://www.youtube.com/channel/UCwghQysyNdstRfv8YUPyglw" class="icon circle"><img src="/css/images/social_media/youtube_social_circle_red.png" width="32px" alt="YouTube"/></a></li>
+	<li><a href="https://www.facebook.com/ossia.io" class="icon circle"><img src="/css/images/social_media/f_logo_RGB-Blue_58.png" width="34px" alt="Facebook"/></a></li>
+    </ul>
+    <ul class="copyright">
+        <li>&copy; ossia 2021</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+    </ul>
+</footer>
+
+<script>
+$(function(){
+    $('.cat a').each(function(){
+    var category_name = "site-" + this.text;
+    if("site-libossia" ===  category_name){
+        $(this).addClass('active');
+        return false;
+    }
+    });
+});
+
+// load asynchronously videos to avoid slowing the page showing
+function init() {
+var vidDefer = document.getElementsByTagName('iframe');
+for (var i=0; i<vidDefer.length; i++) {
+if(vidDefer[i].getAttribute('data-src')) {
+vidDefer[i].setAttribute('src',vidDefer[i].getAttribute('data-src'));
+} } }
+window.onload = init;
+</script>
+
+
+  </body>
+</html>

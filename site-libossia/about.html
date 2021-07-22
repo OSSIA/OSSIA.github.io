@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!--
+	Twenty by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+  <title>
+    About libossia
+  </title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="Open Software System for Interactive Applications - home of ossia score, a free, open-source, cross-platform intermedia sequencer for precise and flexible scripting of interactive scenarios.
+" />
+  <meta
+    name="keywords"
+    content="ossia, score, libossia, sequencer, interactive art, intermedia, new media art, osc, open sound control, midi, oscquery"
+  />
+
+  
+  <link rel="shortcut icon" type="image/png" href="/assets/score-logo.png" />
+  <noscript>
+    <link rel="stylesheet" href="/css/skel.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </noscript>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/skel.min.js"></script>
+  <script src="/js/skel-layers.min.js"></script>
+  <script src="/js/init.js"></script>
+
+  <meta name="viewport" content="width=device-width" />
+
+  <link
+    rel="canonical"
+    href="https://ossia.io/site-libossia/about.html"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Catamaran:regular,bold,semi-bold,medium|Libre+Franklin:regular,bold,semi-bold,light,medium|Lato:regular,bold,semi-bold,light,medium"
+  />
+</head>
+<!-- <div id="cover"></div> -->
+
+
+  <body>
+
+    <header id="header">
+	<nav id="nav" style="vertical-align: middle; ">
+        <div id="ossia-logo-header" style="margin-left: 1em;" >
+            <a id="homebtn" class="home-logo" style="margin: 0;" href="/">
+                <image src="/assets/score-logo.png" height="45px" alt="score logo"/>
+                <h2 class="software small" style="padding: 0; padding-left: 0.2em;padding-bottom: 0.1em;">ossia</h2>
+            </a>
+        </div>
+        <div class="cat" style="flex-grow:1;">
+            <a href="/score/about.html">score</a>
+			<a href="/site-libossia/about.html">libossia</a>
+            <a href="/gallery.html">community</a>
+			<a href="/about.html">about</a>
+        </div>
+        <div>
+            <a href="https://forum.ossia.io/" target="_blank" style="padding-left: 0; padding-right: 1em;">forum</a>
+            <a href="https://gitter.im/OSSIA/score" target="_blank" style="padding:0; padding-right: 1em;">chat</a>
+             <a class="donate" href="https://opencollective.com/ossia" target="_blank" style="padding:0; padding-right: 1em;color: var(--orange);">donate</a>
+        </div>
+	</nav>
+</header>
+
+    <div class="page-content">
+        <article id="main">
+  <header class="container" style="padding-top: 6em;text-align:center;">
+  
+    <div class="menu">
+            <a href="/site-libossia/about.html" class="menu-item" ><span class="icon-svg icon-about"/></span>About</a>
+            <a href="/site-libossia/download.html" class="menu-item" ><span class="icon-svg icon-download"/></span>Download</a>
+            <a href="/site-libossia/features.html" class="menu-item"><span class="icon-svg icon-feature"></span>Features</a>
+            <a href="https://ossia.io/ossia-docs/#introduction" target="_blank" class="menu-item"><span class="icon-svg icon-documentation"></span>Learn</a>
+            <a href="https://gitter.im/OSSIA/libossia" class="menu-item"><span class="icon-svg icon-chat"></span>Chat</a>
+    </div>
+        
+    <h2 class="page-title">About libossia</h2>
+  </header>
+
+    <section class="wrapper style4 container">
+        <h2 id="about-libossia">About libossia</h2>
+<p>libossia is a modern C++, cross-environment distributed object model for creative coding.</p>
+
+<p>It allows to declare the architecture of your creative coding application’s functions as a tree of OSC nodes and parameters. These nodes/parameters can have attributes, which allow to declare many of their properties, such as their values, types, units, ranges, etc.</p>
+
+<p>This OSC tree-based architecture (coined “device” in the OSSIA terminology) can then be exposed over the network under several protocols, some of which allow this architecture, and the properties and values of its nodes, to be fully explored and queried. For now, protocols available in the implemenations are: plain OSC, OSCquery, and Minuit – more are part of libossia and will be made available in the future.</p>
+
+<p>libossia offers bindings and implementations for several environments such as:</p>
+
+<div class="logo-grid">
+    <a href="https://cycling74.com/" class="tooltip"><img src="/assets/logo/max.jpg" height="70" width="auto" /><span class="tooltiptext">Max</span></a>
+    <a href="https://puredata.info/" class="tooltip"><img src="/assets/logo/pd.png" height="60" width="auto" /><span class="tooltiptext">Pure Data</span></a>
+    <a href="https://openframeworks.cc/" class="tooltip"><img src="/assets/logo/of.png" height="40" width="auto" /><span class="tooltiptext">openFrameworks</span></a>
+    <a href="https://faust.grame.fr/" class="tooltip"><img src="/assets/logo/faust.png" height="50" width="auto" /><span class="tooltiptext">Faust</span></a>
+    <a href="https://unity.com/" class="tooltip"><img src="/assets/logo/unity.png" height="60" width="auto" /><span class="tooltiptext">Unity</span></a>
+    <a href="https://processing.org/" class="tooltip"><img src="/assets/logo/processing.jpg" height="60" width="auto" /><span class="tooltiptext">Processing</span></a>
+    <a href="https://www.unrealengine.com/" class="tooltip"><img src="/assets/logo/unreal_engine.png" width="80" height="auto" /><span class="tooltiptext">Unreal Engine</span></a>
+    <a href="https://www.qt.io/" class="tooltip"><img src="/assets/logo/qt-logo.png" height="60" width="auto" /><span class="tooltiptext">Qt QML</span></a>
+    <a href="https://supercollider.github.io/" class="tooltip"><img src="/assets/logo/supercollider-logo.png" height="60" width="auto" /><span class="tooltiptext">SuperCollider</span></a>
+    <a href="https://www.python.org/" class="tooltip"><img src="/assets/logo/python-logo.png" height="60" width="auto" /><span class="tooltiptext">Python</span></a>
+</div>
+
+<p><br />
+Please feel free to come and chat with us ! <a href="https://gitter.im/OSSIA" target="_blank">join the chat</a></p>
+
+<h2 id="documentation-">Documentation :</h2>
+
+<ul>
+  <li><a href="https://ossia.io/ossia-docs/#introduction" target="_blank">Lib and Implementations</a></li>
+  <li><a href="https://github.com/OSSIA/libossia/tree/master/docs/Tutorial" target="_blank">Tutorials</a></li>
+  <li><a href="https://github.com/OSSIA/libossia/tree/master/examples" target="_blank">Examples</a></li>
+  <li><a href="https://ossia.io/libossia/html/" target="_blank">Doxygen</a></li>
+  <li><a href="https://github.com/OSSIA/libossia/wiki/Building" target="_blank">Building</a></li>
+  <li><a href="https://github.com/OSSIA/libossia/wiki/Code-style-guide" target="_blank">Code style</a></li>
+</ul>
+
+<p><a href="https://github.com/OSSIA/libossia" target="_blank">Source code</a></p>
+
+<p><a href="https://ossia.io/ossia-docs/#introduction" target="_blank">API Documentation</a></p>
+
+<p>libossia is distributed under the terms of the CeCILL-C license and of the LGPLv3 license.</p>
+
+    </section>
+</article>
+    
+<script>
+$(function(){
+    $('.menu a').each(function(){
+    if("About libossia" ===  this.text){
+        $(this).addClass('active');
+         return false;
+    }
+    });
+});
+</script>
+
+    </div>
+    <!-- Footer -->
+<footer id="footer">
+
+    <h4 class="follow-us">Follow us !</h4>
+    <ul class="icons">
+	<li><a href="https://twitter.com/ossia_io" class="icon circle"><img src="/css/images/social_media/Twitter_Social_Icon_Circle_Color.png" width="32px" alt="Twitter" /></a></li>
+	<li><a href="https://github.com/OSSIA/score" class="icon circle"><img src="/css/images/social_media/GitHub-Mark-Light-64px.png" width="32px" alt="GitHub" /></a></li>
+	<li><a href="https://vimeo.com/ossia" class="icon circle"><img src="/css/images/social_media/vimeo.png" width="32px" alt="Vimeo"/></a></li>
+	<li><a href="https://www.youtube.com/channel/UCwghQysyNdstRfv8YUPyglw" class="icon circle"><img src="/css/images/social_media/youtube_social_circle_red.png" width="32px" alt="YouTube"/></a></li>
+	<li><a href="https://www.facebook.com/ossia.io" class="icon circle"><img src="/css/images/social_media/f_logo_RGB-Blue_58.png" width="34px" alt="Facebook"/></a></li>
+    </ul>
+    <ul class="copyright">
+        <li>&copy; ossia 2021</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+    </ul>
+</footer>
+
+<script>
+$(function(){
+    $('.cat a').each(function(){
+    var category_name = "site-" + this.text;
+    if("site-libossia" ===  category_name){
+        $(this).addClass('active');
+        return false;
+    }
+    });
+});
+
+// load asynchronously videos to avoid slowing the page showing
+function init() {
+var vidDefer = document.getElementsByTagName('iframe');
+for (var i=0; i<vidDefer.length; i++) {
+if(vidDefer[i].getAttribute('data-src')) {
+vidDefer[i].setAttribute('src',vidDefer[i].getAttribute('data-src'));
+} } }
+window.onload = init;
+</script>
+
+
+  </body>
+</html>

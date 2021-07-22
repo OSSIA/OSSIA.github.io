@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!--
+	Twenty by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+  <title>
+    ossia | home of ossia score and libossia
+  </title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="Open Software System for Interactive Applications - home of ossia score, a free, open-source, cross-platform intermedia sequencer for precise and flexible scripting of interactive scenarios.
+" />
+  <meta
+    name="keywords"
+    content="ossia, score, libossia, sequencer, interactive art, intermedia, new media art, osc, open sound control, midi, oscquery"
+  />
+
+  
+  <link rel="shortcut icon" type="image/png" href="/assets/score-logo.png" />
+  <noscript>
+    <link rel="stylesheet" href="/css/skel.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </noscript>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/skel.min.js"></script>
+  <script src="/js/skel-layers.min.js"></script>
+  <script src="/js/init.js"></script>
+
+  <meta name="viewport" content="width=device-width" />
+
+  <link
+    rel="canonical"
+    href="https://ossia.io/"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Catamaran:regular,bold,semi-bold,medium|Libre+Franklin:regular,bold,semi-bold,light,medium|Lato:regular,bold,semi-bold,light,medium"
+  />
+</head>
+<!-- <div id="cover"></div> -->
+
+ <body class="index">
+
+    <header id="header">
+	<nav id="nav" style="vertical-align: middle; ">
+        <div id="ossia-logo-header" style="margin-left: 1em;" >
+            <a id="homebtn" class="home-logo" style="margin: 0;" href="/">
+                <image src="/assets/score-logo.png" height="45px" alt="score logo"/>
+                <h2 class="software small" style="padding: 0; padding-left: 0.2em;padding-bottom: 0.1em;">ossia</h2>
+            </a>
+        </div>
+        <div class="cat" style="flex-grow:1;">
+            <a href="/score/about.html">score</a>
+			<a href="/site-libossia/about.html">libossia</a>
+            <a href="/gallery.html">community</a>
+			<a href="/about.html">about</a>
+        </div>
+        <div>
+            <a href="https://forum.ossia.io/" target="_blank" style="padding-left: 0; padding-right: 1em;">forum</a>
+            <a href="https://gitter.im/OSSIA/score" target="_blank" style="padding:0; padding-right: 1em;">chat</a>
+             <a class="donate" href="https://opencollective.com/ossia" target="_blank" style="padding:0; padding-right: 1em;color: var(--orange);">donate</a>
+        </div>
+	</nav>
+</header>
+
+
+    <div class="page-content">
+        <!-- Loading the carousel for the gallery -->
+
+<link rel="stylesheet" href="/owlcarousel/owl.carousel.min.css">
+<link rel="stylesheet" href="/owlcarousel/owl.theme.default.min.css">
+
+<!-- Main -->
+<article id="main" style="background-color: var(--dark-grey);">
+
+<!-- Banner -->
+<div style="text-align: center;">
+<div id="banner" class="background" >
+   <img class="background-image" src="css/images/banner_quarre.jpg" alt="Quarrè"/>
+
+   <div class="overlay">
+        <div class="inner">
+            <header>
+                <!-- Logo -->
+                <div style="display:flex; justify-content:center; align-items: center;">
+                    <image class="software-logo" src="/assets/score-logo.png" alt="score logo"/>
+                    <h1 class="software">ossia score</h1>
+                </div>
+
+                   <div class="line"></div>
+                <!-- Short description -->
+                <h2 class="catchphrase">A free and open-source sequencer</h2>
+
+                <p style="font-size: 20px;"> A <b>free, open-source, cross-platform intermedia sequencer </b> for precise and flexible scripting of <b>interactive</b>  scenarios. <br/> Control and score any OSC-compliant software or hardware:
+                Max/MSP, PureData, openFrameworks, Processing… </p>
+                <br/>
+                <!-- Download button -->
+            <a href="/score/download.html" class="download">Download</a>
+            </header>
+
+        </div>
+    </div>
+</div>
+</div>
+<!-- Awards -->
+<section id="index" class="white" style="padding-top: 4em;">
+    <h2 style="text-align: center;" ><span class="title-section" style="color: black; border-color:var(--orange);">Supporting organizations</span></h2>
+    <div class="logo-grid" style="padding-top: 0.1em;">
+    <a href="https://www.unrealengine.com/"><img loading="lazy" src="/assets/logo/unreal_engine.png" alt="Unreal Engine" width="80" height="auto"/></a>
+    <a href="https://www.mozilla.org/" ><img loading="lazy" src="/assets/logo/mozilla-logo.png" alt="Mozilla" /></a>
+    <a href="https://opencollective.com/"><img loading="lazy" src="/assets/logo/opencollectivelogo.png" alt="OpenCollective" /></a>
+    <a href="https://anr.fr/" ><img loading="lazy" src="/assets/logo/anr-logo.png" alt="ANR" /></a>
+    <a href="https://www.culture.gouv.fr/"><img loading="lazy" src="/assets/logo/logo-ministere-de-la-culture.png" alt="Ministère de la culture"/></a>
+    <a href="https://www.labri.fr/"><img loading="lazy" src="/assets/logo/LABRI_BIG.png" alt="LaBRI" /></a>
+    <a href="https://scrime.u-bordeaux.fr/"><img loading="lazy" src="/assets/logo/logo-SCRIME-2018-Light.jpg" alt="SCRIME" /></a>
+    <a href="https://www.blueyeti.fr/"><img loading="lazy" src="/assets/logo/blueyeti.png" alt="Blue Yeti" /></a>
+    </div>
+</section>
+
+   <!-- Features -->
+<div id="overlay" onclick="hideOverlay()">
+<img id="overlay-image" loading="lazy" src="/assets/score.png" alt="score" />
+</div>
+ <section id="index" class="dark-grey" >
+       <h2 style="text-align: center;" ><a href="/score/features.html" class="title-section">What is ossia score ?</a></h2>
+       <div class="feature-container">
+            <div class="feature image-container">
+                <img onclick="displayInOverlay(this.src)" loading="lazy" src="/assets/score.png"  alt="score" />
+            </div>
+            <div class="feature text" >
+                <h2>An intermedia sequencer</h2>
+                <p> Sequence various kinds of media in an intelligent timeline:
+                    <ul>
+                        <li>Playback most audio formats, with support for multichannel</li>
+                        <li>H.264 and HAP video playback, with a state-of-the art cross-platform video & shader pipeline</li>
+                        <li>Send & receive OSC, MIDI, DMX or directly talk through HTTP or a serial port</li>
+                    </ul>
+                </p>
+            </div>
+       </div>
+        <div class="feature-container reversed">
+            <div class="feature text" >
+                <h2>Advanced interaction facilities</h2>
+                <p>A sequencer built for interactive shows:
+                    <ul>
+                        <li>Trigger any part of the score upon external conditions or hardware controls</li>
+                        <li>Use conditions to create branching scores visually</li>
+                        <li>Control and get controlled through any external devices and protocols with a streamlined user interface</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="feature image-container">
+                <img onclick="displayInOverlay(this.src)" loading="lazy"  src="/assets/feature-interaction.gif" alt="Interaction"/>
+            </div>
+       </div>
+       <div class="feature-container">
+            <div class="feature image-container">
+                <img onclick="displayInOverlay(this.src)" loading="lazy"  src="/assets/feature-script.png"  alt="Scripting"/>
+            </div>
+            <div class="feature text" >
+                <h2>A scriptable, open software</h2>
+                <p>Multiple programming languages are embedded in ossia score:
+                    <ul>
+                        <li>Livecode with JavaScript directly in the score for advanced mappings, or create device mapping scripts</li>
+                        <li>Create blazing fast audio processors with Faust</li>
+                        <li>Extend any part of the software through the C++ API</li>
+                        <li>Write simple math expressions for quick control</i>
+                    </ul>
+                </p>
+            </div>
+       </div>
+       <div class="feature-container reversed">
+           <div class="feature text" >
+               <h2>Mixed modular & timeline workflow</h2>
+               <p>Connect processes in a modular way directly from its timeline:
+                   <ul>
+                       <li>Switch between timeline and nodal view at any point to edit processes more precisely</li>
+                       <li>Create state-machine-like scores for atemporal scenarios</li>
+                       <li>Nest and group without depth limit</li>
+                   </ul>
+               </p>
+           </div>
+           <div class="feature image-container">
+                <img onclick="displayInOverlay(this.src)" loading="lazy"  src="/assets/feature-nodal.gif"  alt="Nodal"/>
+           </div>
+      </div>
+ </section>
+
+
+
+    <section id="index" class="white">
+     <div class="feature-container reversed">
+            <div class="feature text" >
+                <h2>Supported protocols</h2>
+                <p>
+                    <ul>
+                        <li>These protocols are implemented behind a common interface in libossia.</li>
+                        <li>Any app using libossia can thus benefit from their support, bridge them, etc.</li>
+                        <li>These protocols are available under a simple UI in ossia score</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="feature logo-grid">
+                <a href="https://www.midi.org/" class="tooltip"><img loading="lazy" src="/assets/logo/midi.jpg" alt="MIDI" height="60" width="auto"/><span class="tooltiptext">Midi</span></a>
+                <a href="https://opensoundcontrol.org/" class="tooltip"><span>OSC</span><span class="tooltiptext">Open Sound Control</span></a>
+                <a href="https://spout.zeal.co/" class="tooltip"><img loading="lazy" src="/assets/logo/spout.png" alt="Spout" height="50px" width="auto"/><span class="tooltiptext">Spout</span></a>
+                <a href="https://www.arduino.cc/" class="tooltip"><img loading="lazy" src="/assets/logo/arduino.png" alt="Arduino" height="70px" width="auto"/><span class="tooltiptext">Arduino</span></a>
+                <a href=""><span>DMX</span></a>
+                <a href=""><span>HTTP</span></a>
+                <a href="" class="tooltip"><img loading="lazy" src="/assets/logo/websocket.png" alt="WebSockets" width="80" height="auto" /><span class="tooltiptext">Websocket</span></a>
+                <a href="https://www.phidgets.com/" class="tooltip"><img loading="lazy" src="/assets/logo/phidgets.png" alt="Phidgets" width="80" height="auto"/><span class="tooltiptext">Phidgets</span></a>
+                <a href="" class="tooltip"><img loading="lazy" src="/assets/logo/gamepad.png" alt="Gamepad" width="80" height="auto"/><span class="tooltiptext">Gamepad</span></a>
+                <a href="" class="tooltip"><img loading="lazy" src="/assets/logo/wiimote.png" alt="Wiimote" width="80" height="auto"/><span class="tooltiptext">Wiimote</span></a>
+                <a href="https://www.avid.com/learn-and-support/c24" alt="Avid C|24" class="tooltip"><span>C|24</span><span class="tooltiptext">Avid C|24</span></a>
+            </div>
+       </div>
+       <br/>
+       <div class="feature-container ">
+            <div class="feature logo-grid">
+                <a href="https://madmapper.com/" class="tooltip"><img loading="lazy" src="/assets/logo/madmapper.jpg" alt="MadMapper" height="50" width="auto"/><span class="tooltiptext">Madmapper</span></a>
+                <a href="https://www.garagecube.com/modul8/" class="tooltip"><img loading="lazy" src="/assets/logo/modul8.jpeg" alt="modul8" height="70" width="auto"/><span class="tooltiptext">modul8</span></a>
+                <a href="https://www.millumin.com/v3/index.php" class="tooltip"><img loading="lazy" src="/assets/logo/millumin.png" alt="Millumin" height="70" width="auto"/><span class="tooltiptext">Millumin</span></a>
+                <a href="https://cycling74.com/" class="tooltip"><img loading="lazy" src="/assets/logo/max.jpg" alt="Max/MSP" height="70" width="auto"/><span class="tooltiptext">Max</span></a>
+                <a href="https://puredata.info/" class="tooltip"><img loading="lazy" src="/assets/logo/pd.png" alt="PureData" height="60" width="auto" /><span class="tooltiptext">Pure Data</span></a>
+                <a href="https://openframeworks.cc/" class="tooltip"><img loading="lazy" src="/assets/logo/of.png" alt="OpenFrameworks" height="40" width="auto"/><span class="tooltiptext">openFrameworks</span></a>
+                <a href="https://processing.org/" class="tooltip"><img loading="lazy" src="/assets/logo/processing.jpg" alt="Processing" height="60" width="auto"/><span class="tooltiptext">Processing</span></a>
+                <a href="https://vidvox.net/" class="tooltip"><img loading="lazy" src="/assets/logo/vdmx.png" alt="VDMX" height="50" width="auto"/><span class="tooltiptext">VDMX</span></a>
+                <a href="https://vvvv.org/" class="tooltip"><img loading="lazy" src="/assets/logo/vvvv.png" alt="VVVV" height="70" width="auto"/><span class="tooltiptext">vvvv</span></a>
+                <a href="https://faust.grame.fr/" class="tooltip"><img loading="lazy" src="/assets/logo/faust.png" alt="Faust" height="50" width="auto"/><span class="tooltiptext">Faust</span></a>
+                <a href="https://unity.com/" class="tooltip"><img loading="lazy" src="/assets/logo/unity.png" alt="Unity3D" height="60" width="auto"/><span class="tooltiptext">Unity</span></a>
+                <a href="https://www.unrealengine.com/" class="tooltip"><img loading="lazy" src="/assets/logo/unreal_engine.png" alt="Unreal Engine" width="80" height="auto"/><span class="tooltiptext">Unreal Engine</span></a>
+                <a href="https://github.com/patriciogonzalezvivo/glslViewer"><span>glslViewer</span></a>
+                <a href="https://opencv.org/" class="tooltip"><img loading="lazy" src="/assets/logo/opencv-logo.png" alt="OpenCV" width="60" height="auto"/><span class="tooltiptext">OpenCV</span></a>
+            </div>
+            <div class="feature text" >
+                <h2>Compatible environments</h2>
+                <p>You can use your favorite creative coding language with ossia:
+                    <ul>
+                        <li>Either through traditional OSC connection</li>
+                        <li>Or through the more advanced OSCQuery protocol</li>
+                        <li>Or through direct integration of libossia</li>
+                    </ul>
+                </p>
+            </div>
+       </div>
+ </section>
+          <!-- Video -->
+    <section id="index" class="black" style="">
+        <div class="frontpage-video">
+        <div class="videoWrapper">
+            <iframe src="" data-src="https://player.vimeo.com/video/247547998" frameborder="0" allow="fullscreen" allowfullscreen></iframe>
+        </div>
+        </div>
+    </section>
+
+   <!-- Recent posts and twitter feed -->
+    <section class="white blog-twitter" id="index">
+        <div style="display: flex; justify-content: space-around; margin: 0;">
+            <div class="blog-list">
+                <h2 style="text-align: center;" ><a href="/blog.html" class="title-section">Blog</a></h2>
+
+                <div class="recent-post-view">
+                    
+                        <a href=/posts/reflection/ class="thumbnail" >
+                            
+                                <img loading="lazy" class="thumbnail-blogpost" alt="Achieving generic bliss with reflection in modern C++" src=/assets/blog/reflection/banner.png width="auto"/>
+                            
+                            <br/>
+                            <h2 class="blog-title">Achieving generic bliss with reflection in modern C++ </h2>
+                            <span class="blog-date">Jul 22, 2021</span>
+
+                        </a>
+                    
+                        <a href=/posts/summer-internships/ class="thumbnail" >
+                            
+                                <img loading="lazy" class="thumbnail-blogpost" alt="Summer internships" src=/assets/blog/internships-2021/banner.jpg width="auto"/>
+                            
+                            <br/>
+                            <h2 class="blog-title">Summer internships </h2>
+                            <span class="blog-date">Jun 25, 2021</span>
+
+                        </a>
+                    
+                </div>
+            </div>
+            <!-- Twitter timeline -->
+            <div class="twitter" style="width: 30%;">
+                 <h2><a class="twitter-timeline" data-tweet-limit="1" href="https://twitter.com/ossia_io?ref_src=twsrc%5Etfw">Tweets by ossia_io</a> </h2>
+            </div>
+        </div>
+    </section>
+
+	<!-- Gallery -->
+      <section id="index" class="black">
+        <h2 style="text-align: center;" ><a href="/gallery.html" class="title-section">Gallery</a></h2>
+        <div class="owl-carousel owl-theme" >
+            <div class="carouselcontainer">
+                <a href="/gallery.html"><img loading="lazy" class="frontpage-gallery" src="/assets/blank.png" alt="Carrousel" data-echo="assets/gallery/frontpage/carrousel-frontpage.jpg"/></a>
+                <header>
+                    <a href="https://www.abbayeauxdames.org/en/musicaventure/carrousel-musical/" class="gallery-text">Carousel Musical</a> <span class="gallery-text">-</span> <a href="https://www.blueyeti.fr/le-carrousel-musical-abbaye-aux-dames/" class="gallery-text">Blue Yeti, Abbaye aux Dames</a>
+                </header>
+            </div>
+            <div class="carouselcontainer">
+                <a href="/gallery.html"><img loading="lazy" class="frontpage-gallery" src="/assets/blank.png" alt="Nebula" data-echo="assets/gallery/frontpage/Nebula_ChampignonsNeigeJaune-frontpage.jpg"/></a>
+                <header>
+                    <a href="https://www.baltazars.org/project/nebula/" class="gallery-text">Nebula</a> <span class="gallery-text">-</span> <a href="https://www.baltazars.org/" class="gallery-text">Les Baltazars</a>
+                </header>
+            </div>
+            <div class="carouselcontainer">
+                <a href="/gallery.html"><img loading="lazy" class="frontpage-gallery" src="/assets/blank.png" alt="Four For" data-echo="assets/gallery/frontpage/DID_4858.JPG"/></a>
+                <header>
+                    <a href="https://bravozoulou.fr/projets/four-for/" class="gallery-text">Four For - Bravo Zoulou</a>
+                    <span class="copyright"><br/>&copy; Didier Crasnault</span>
+                </header>
+            </div>
+            <div class="carouselcontainer">
+                <a href="/gallery.html"><img loading="lazy" class="frontpage-gallery" src="/assets/blank.png" alt="Quarrè" data-echo="assets/gallery/frontpage/quarre-frontpage.jpg"/></a>
+                <header>
+                    <a href="https://wpn214.com/en/" class="gallery-text">Quarrè - Pierre Cochard</a>
+                </header>
+            </div>
+            <div class="carouselcontainer" >
+                <a href="/gallery.html"><img loading="lazy" class="frontpage-gallery" src="/assets/blank.png" alt="Méta Chef d'Orchestre" data-echo="assets/gallery/frontpage/dome_scrime-frontpage.jpg"/></a>
+                <header>
+                    <a href="https://scrime.u-bordeaux.fr/Arts-Sciences/Residences/Residences/Meta-Chef-d-Orchestre" class="gallery-text">Méta Chef d’Orchestre - Serge Delaubier</a>
+                </header>
+            </div>
+            <div class="carouselcontainer" >
+                <a href="/gallery.html"><img loading="lazy" class="frontpage-gallery" src="/assets/blank.png" alt="Sonotact" data-echo="assets/gallery/frontpage/sonotact-frontpage.jpg"/></a>
+                <header>
+                    <a href="https://scrime.u-bordeaux.fr/Arts-Sciences/Residences/Residences/Sonotact" class="gallery-text">Sonotact - Pascale Criton</a>
+                </header>
+            </div>
+        </div>
+      </section>
+</article>
+
+<script async src="/owlcarousel/owl.carousel.min.js"></script>
+<script>
+$(window).on('load',function(){
+  $('.owl-carousel').owlCarousel({
+    loop:true,
+    margin:10,
+    nav:false,
+    responsive:true,
+    autoWidth: true
+})
+});
+
+function displayInOverlay(image) {
+  document.getElementById("overlay").style.display = "block";
+  document.getElementById("overlay-image").src = image;
+}
+
+function hideOverlay() {
+  document.getElementById("overlay").style.display = "none";
+}
+</script>
+ <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+ <script>
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+      define(function() {
+        return factory(root);
+      });
+    } else if (typeof exports === 'object') {
+      module.exports = factory;
+    } else {
+      root.echo = factory(root);
+    }
+  })(this, function (root) {
+  
+    'use strict';
+  
+    var echo = {};
+  
+    var callback = function () {};
+  
+    var offset, poll, delay, useDebounce, unload;
+  
+    var isHidden = function (element) {
+      return (element.offsetParent === null);
+    };
+    
+    var inView = function (element, view) {
+      if (isHidden(element)) {
+        return false;
+      }
+  
+      var box = element.getBoundingClientRect();
+      return (box.right >= view.l && box.bottom >= view.t && box.left <= view.r && box.top <= view.b);
+    };
+  
+    var debounceOrThrottle = function () {
+      if(!useDebounce && !!poll) {
+        return;
+      }
+      clearTimeout(poll);
+      poll = setTimeout(function(){
+        echo.render();
+        poll = null;
+      }, delay);
+    };
+  
+    echo.init = function (opts) {
+      opts = opts || {};
+      var offsetAll = opts.offset || 0;
+      var offsetVertical = opts.offsetVertical || offsetAll;
+      var offsetHorizontal = opts.offsetHorizontal || offsetAll;
+      var optionToInt = function (opt, fallback) {
+        return parseInt(opt || fallback, 10);
+      };
+      offset = {
+        t: optionToInt(opts.offsetTop, offsetVertical),
+        b: optionToInt(opts.offsetBottom, offsetVertical),
+        l: optionToInt(opts.offsetLeft, offsetHorizontal),
+        r: optionToInt(opts.offsetRight, offsetHorizontal)
+      };
+      delay = optionToInt(opts.throttle, 250);
+      useDebounce = opts.debounce !== false;
+      unload = !!opts.unload;
+      callback = opts.callback || callback;
+      echo.render();
+      if (document.addEventListener) {
+        root.addEventListener('scroll', debounceOrThrottle, false);
+        root.addEventListener('load', debounceOrThrottle, false);
+      } else {
+        root.attachEvent('onscroll', debounceOrThrottle);
+        root.attachEvent('onload', debounceOrThrottle);
+      }
+    };
+  
+    echo.render = function (context) {
+      var nodes = (context || document).querySelectorAll('[data-echo], [data-echo-background]');
+      var length = nodes.length;
+      var src, elem;
+      var view = {
+        l: 0 - offset.l,
+        t: 0 - offset.t,
+        b: (root.innerHeight || document.documentElement.clientHeight) + offset.b,
+        r: (root.innerWidth || document.documentElement.clientWidth) + offset.r
+      };
+      for (var i = 0; i < length; i++) {
+        elem = nodes[i];
+        if (inView(elem, view)) {
+  
+          if (unload) {
+            elem.setAttribute('data-echo-placeholder', elem.src);
+          }
+  
+          if (elem.getAttribute('data-echo-background') !== null) {
+            elem.style.backgroundImage = 'url(' + elem.getAttribute('data-echo-background') + ')';
+          }
+          else if (elem.src !== (src = elem.getAttribute('data-echo'))) {
+            elem.src = src;
+          }
+  
+          if (!unload) {
+            elem.removeAttribute('data-echo');
+            elem.removeAttribute('data-echo-background');
+          }
+  
+          callback(elem, 'load');
+        }
+        else if (unload && !!(src = elem.getAttribute('data-echo-placeholder'))) {
+  
+          if (elem.getAttribute('data-echo-background') !== null) {
+            elem.style.backgroundImage = 'url(' + src + ')';
+          }
+          else {
+            elem.src = src;
+          }
+  
+          elem.removeAttribute('data-echo-placeholder');
+          callback(elem, 'unload');
+        }
+      }
+      if (!length) {
+        echo.detach();
+      }
+    };
+  
+    echo.detach = function () {
+      if (document.removeEventListener) {
+        root.removeEventListener('scroll', debounceOrThrottle);
+      } else {
+        root.detachEvent('onscroll', debounceOrThrottle);
+      }
+      clearTimeout(poll);
+    };
+  
+    return echo;
+  
+  });
+</script>
+<script>
+    echo.init({
+      offset: 2500,
+      throttle: 250,
+      unload: false,
+      callback: function (element, op) {
+        //console.log(element, 'has been', op + 'ed')
+      }
+    });
+</script>
+
+    </div>
+
+    <!-- Footer -->
+<footer id="footer">
+
+    <h4 class="follow-us">Follow us !</h4>
+    <ul class="icons">
+	<li><a href="https://twitter.com/ossia_io" class="icon circle"><img src="/css/images/social_media/Twitter_Social_Icon_Circle_Color.png" width="32px" alt="Twitter" /></a></li>
+	<li><a href="https://github.com/OSSIA/score" class="icon circle"><img src="/css/images/social_media/GitHub-Mark-Light-64px.png" width="32px" alt="GitHub" /></a></li>
+	<li><a href="https://vimeo.com/ossia" class="icon circle"><img src="/css/images/social_media/vimeo.png" width="32px" alt="Vimeo"/></a></li>
+	<li><a href="https://www.youtube.com/channel/UCwghQysyNdstRfv8YUPyglw" class="icon circle"><img src="/css/images/social_media/youtube_social_circle_red.png" width="32px" alt="YouTube"/></a></li>
+	<li><a href="https://www.facebook.com/ossia.io" class="icon circle"><img src="/css/images/social_media/f_logo_RGB-Blue_58.png" width="34px" alt="Facebook"/></a></li>
+    </ul>
+    <ul class="copyright">
+        <li>&copy; ossia 2021</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+    </ul>
+</footer>
+
+<script>
+$(function(){
+    $('.cat a').each(function(){
+    var category_name = "site-" + this.text;
+    if("" ===  category_name){
+        $(this).addClass('active');
+        return false;
+    }
+    });
+});
+
+// load asynchronously videos to avoid slowing the page showing
+function init() {
+var vidDefer = document.getElementsByTagName('iframe');
+for (var i=0; i<vidDefer.length; i++) {
+if(vidDefer[i].getAttribute('data-src')) {
+vidDefer[i].setAttribute('src',vidDefer[i].getAttribute('data-src'));
+} } }
+window.onload = init;
+</script>
+
+
+  </body>
+</html>
